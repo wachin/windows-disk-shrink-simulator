@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0b1220" />
+  <title>Reducir Disco C: (Windows) — Simulador en MB</title>
+  <meta name="description" content="Simula la ventana 'Reducir volumen' de Windows: ingresa 'Tamaño total antes' y 'Espacio disponible' en MB y entiende los cálculos." />
+  <link rel="icon" href="logo.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="Inicio">
+      <img src="logo.svg" alt="" width="34" height="34" />
+      <div class="brand__text">
+        <div class="brand__title">Reducir Disco (Windows)</div>
+        <div class="brand__subtitle">Simulador + explicación en MB</div>
+      </div>
+    </a>
+
+    <nav class="actions">
+      <a class="btn btn--ghost" href="https://github.com/wachin/reducir-disco" target="_blank" rel="noopener noreferrer">
+        Ver en GitHub
+      </a>
+      <a class="btn btn--primary" href="https://github.com/wachin/reducir-disco/fork" target="_blank" rel="noopener noreferrer">
+        🍴 Haz un fork
+      </a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero__left">
+        <h1>📦 Entiende “Reducir volumen” como si fuera un problema de matemáticas</h1>
+        <p>
+          Ingresa los dos valores que Windows te muestra y este simulador completará los demás,
+          <strong>con las mismas reglas</strong> (no te dejará reducir más de lo permitido).
+        </p>
+
+        <div class="callout">
+          <div class="callout__title">👨‍💻 ¿Eres desarrollador?</div>
+          <p class="callout__text">
+            Este proyecto es abierto (GPLv3). Si te sirve, <strong>haz un fork</strong>, mejora la UX,
+            agrega traducciones o integra un “modo Linux install”.
+          </p>
+          <div class="callout__cta">
+            <a class="btn btn--primary" href="https://github.com/wachin/reducir-disco/fork" target="_blank" rel="noopener noreferrer">🍴 Fork ahora</a>
+            <a class="btn btn--ghost" href="https://github.com/wachin/reducir-disco/issues" target="_blank" rel="noopener noreferrer">💡 Proponer mejora</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero__right">
+        <div class="card win-card" role="region" aria-label="Simulador de Reducir volumen de Windows">
+          <div class="win-card__title">
+            <span class="win-dot"></span><span class="win-dot"></span><span class="win-dot"></span>
+            <span class="win-card__titleText">Reducir C: (Simulación)</span>
+          </div>
+
+          <div class="card__body">
+            <form id="form" class="grid" autocomplete="off">
+              <div class="field">
+                <label for="beforeMb">Tamaño total antes de la reducción, en MB:</label>
+                <div class="inputRow">
+                  <input id="beforeMb" name="beforeMb" inputmode="numeric" placeholder="Ej: 457184" aria-describedby="beforeHelp" />
+                  <button class="iconBtn" type="button" id="pasteBefore" title="Pegar desde portapapeles">📋</button>
+                </div>
+                <div class="hint" id="beforeHelp">
+                  Total del volumen C: en MB (como lo muestra Windows, sin puntos).
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="availableMb">Espacio disponible para la reducción, en MB:</label>
+                <div class="inputRow">
+                  <input id="availableMb" name="availableMb" inputmode="numeric" placeholder="Ej: 199422" aria-describedby="availHelp" />
+                  <button class="iconBtn" type="button" id="pasteAvail" title="Pegar desde portapapeles">📋</button>
+                </div>
+                <div class="hint" id="availHelp">
+                  Máximo que Windows te deja reducir (a veces es menor que el “espacio libre” real).
+                </div>
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="field">
+                <label for="reduceMb">Tamaño de espacio que desea reducir, en MB:</label>
+
+                <div class="inputRow">
+                  <input id="reduceMb" name="reduceMb" inputmode="numeric" aria-describedby="reduceHelp" />
+                  <button class="iconBtn" type="button" id="maxReduce" title="Usar el máximo permitido">MAX</button>
+                </div>
+
+                <input id="reduceSlider" class="slider" type="range" min="0" max="0" value="0" />
+                <div class="hint" id="reduceHelp">
+                  Puedes <strong>disminuir</strong> este valor, pero <strong>no aumentarlo</strong> por encima del “disponible”.
+                </div>
+              </div>
+
+              <div class="field">
+                <label for="afterMb">Tamaño total después de la reducción, en MB:</label>
+                <div class="inputRow">
+                  <input id="afterMb" name="afterMb" readonly />
+                  <button class="iconBtn" type="button" id="copyAfter" title="Copiar">⎘</button>
+                </div>
+                <div class="hint">
+                  Se calcula automáticamente con: <code>Después = Antes − Reducir</code>
+                </div>
+              </div>
+
+              <div class="status" id="status" aria-live="polite"></div>
+            </form>
+
+            <div class="mathBox">
+              <div class="mathBox__row">
+                <div class="badge">FÓRMULA</div>
+                <div class="mathBox__text"><code>Después = Antes − Reducir</code></div>
+              </div>
+              <div class="mathBox__row">
+                <div class="badge">REGLA WINDOWS</div>
+                <div class="mathBox__text"><code>Reducir ≤ Disponible</code></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card explain-card">
+          <div class="card__body">
+            <h2 class="h2">🧠 Explicación simple (nivel colegio)</h2>
+
+            <details open>
+              <summary>1) ¿Qué significa “Tamaño total antes”?</summary>
+              <p>
+                Es el tamaño total del disco C: <strong>antes</strong> de recortarlo.
+                Imagínalo como una regla: todo el largo que tiene C: en MB.
+              </p>
+            </details>
+
+            <details>
+              <summary>2) ¿Qué significa “Espacio disponible para la reducción”?</summary>
+              <p>
+                Es el <strong>máximo</strong> que Windows te permite recortar. No siempre coincide con “espacio libre”,
+                porque existen archivos del sistema que Windows no puede mover fácilmente.
+              </p>
+            </details>
+
+            <details>
+              <summary>3) ¿Qué hace “Tamaño de espacio que desea reducir”?</summary>
+              <p>
+                Es lo que tú le pides a Windows que recorte. Puedes pedir menos, pero no más del máximo.
+                Por eso este simulador <strong>no te deja aumentar</strong> por encima del “disponible”.
+              </p>
+            </details>
+
+            <details>
+              <summary>4) ¿Qué significa “Tamaño total después”?</summary>
+              <p>
+                Es lo que le queda al disco C: luego de recortarlo. Matemática directa:
+                <strong>Después = Antes − Reducir</strong>.
+              </p>
+            </details>
+
+            <details>
+              <summary>5) ¿Qué pasa con lo que “reduces”?</summary>
+              <p>
+                Ese espacio queda como <strong>“No asignado”</strong> y luego puedes crear otra partición
+                o usarlo para instalar Linux.
+              </p>
+            </details>
+
+            <div class="tips">
+              <div class="tips__title">⚠️ Consejo rápido</div>
+              <p class="tips__text">
+                Si vas a mantener Windows funcionando cómodo, suele ser buena idea dejarle espacio libre suficiente.
+                (Este simulador explica el cálculo; la decisión final depende del uso y del tamaño del disco.)
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__left">
+      <img src="logo.svg" alt="" width="22" height="22" />
+      <div>
+        <div><strong>Copyright</strong> © 2026 Washington Indacochea Delgado</div>
+        <div class="muted">
+          <span>Correo:</span> <a href="mailto:linuxfrontier@proton.me">linuxfrontier@proton.me</a>
+          <span class="sep">•</span>
+          <span>Licencia:</span> <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noopener noreferrer">GPL-3.0</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer__right">
+      <a class="btn btn--ghost" href="https://github.com/wachin/reducir-disco" target="_blank" rel="noopener noreferrer">Repositorio</a>
+      <a class="btn btn--primary" href="https://github.com/wachin/reducir-disco/fork" target="_blank" rel="noopener noreferrer">🍴 Fork</a>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
