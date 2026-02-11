@@ -1,18 +1,196 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
-  <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#7c3aed"/>
-      <stop offset="1" stop-color="#1f5cff"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 220 220"
+   role="img"
+   aria-label="Reducir Disco logo"
+   version="1.1"
+   id="svg11"
+   sodipodi:docname="logo.svg"
+   inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview11"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="2.2863636"
+     inkscape:cx="110"
+     inkscape:cy="110"
+     inkscape:window-width="1366"
+     inkscape:window-height="705"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg11" />
+  <defs
+     id="defs2">
+    <linearGradient
+       id="g"
+       x1="0"
+       y1="0"
+       x2="1"
+       y2="1">
+      <stop
+         offset="0"
+         stop-color="#4aa3ff"
+         id="stop1" />
+      <stop
+         offset="1"
+         stop-color="#1d6fff"
+         id="stop2" />
     </linearGradient>
-    <filter id="s" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#000" flood-opacity=".35"/>
+    <filter
+       id="s"
+       x="-0.0081882032"
+       y="-0.0081882032"
+       width="1.0163764"
+       height="1.0163764">
+      <feDropShadow
+         dx="0"
+         dy="6"
+         stdDeviation="8"
+         flood-color="#000"
+         flood-opacity="0.45" />
+      <feGaussianBlur
+         stdDeviation="0.0027622443"
+         id="feGaussianBlur11" />
     </filter>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#g"
+       id="linearGradient11"
+       x1="317.52548"
+       y1="30.819574"
+       x2="336.60426"
+       y2="49.898358"
+       gradientTransform="matrix(0.54354168,0,0,4.0377382,-52.958937,-52.958938)"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#g"
+       id="linearGradient12"
+       x1="107"
+       y1="97"
+       x2="133"
+       y2="123"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(1.4814449,0,0,1.4814449,-52.958937,-52.958938)" />
   </defs>
-  <rect x="20" y="20" width="216" height="216" rx="54" fill="url(#g)" filter="url(#s)"/>
-  <circle cx="128" cy="120" r="58" fill="rgba(255,255,255,.16)"/>
-  <circle cx="128" cy="120" r="38" fill="rgba(255,255,255,.12)"/>
-  <circle cx="128" cy="120" r="12" fill="rgba(255,255,255,.18)"/>
-  <rect x="122" y="54" width="12" height="132" rx="6" fill="rgba(255,255,255,.75)"/>
-  <path d="M170 168c0 4-3 7-7 7H98c-4 0-7-3-7-7s3-7 7-7h65c4 0 7 3 7 7z" fill="rgba(255,255,255,.85)"/>
-  <path d="M166 154l20 14-20 14c-2 1-4 0-5-2-1-2 0-4 2-5l9-7-9-7c-2-1-3-3-2-5 1-2 3-3 5-2z" fill="rgba(255,255,255,.9)"/>
+  <rect
+     x="18"
+     y="18"
+     width="184"
+     height="184"
+     rx="34"
+     fill="#0f131a"
+     stroke="#223044"
+     stroke-width="3"
+     filter="url(#s)"
+     id="rect2"
+     style="fill:#341515;fill-opacity:1"
+     transform="matrix(1.145002,0,0,1.145002,-15.95022,-15.95022)" />
+  <!-- Disk bar -->
+  <rect
+     x="15.187527"
+     y="89.259766"
+     width="189.62494"
+     height="41.480453"
+     rx="20.740227"
+     fill="#141b25"
+     stroke="#2a3a52"
+     stroke-width="2.96288"
+     id="rect3" />
+  <rect
+     x="15.187527"
+     y="89.259766"
+     width="115.5527"
+     height="41.480453"
+     rx="20.740227"
+     fill="#8a6a2a"
+     id="rect4"
+     style="stroke-width:1.48144" />
+  <rect
+     x="130.74023"
+     y="89.259766"
+     width="74.072243"
+     height="41.480453"
+     rx="20.740227"
+     fill="#c9d2de"
+     opacity="0.2"
+     id="rect5"
+     style="stroke-width:1.48144" />
+  <!-- Handle -->
+  <rect
+     x="119.62939"
+     y="71.482437"
+     width="10.370113"
+     height="77.035133"
+     rx="5.1850567"
+     fill="url(#g)"
+     id="rect6"
+     style="fill:url(#linearGradient11);stroke-width:1.48144" />
+  <circle
+     cx="124.81445"
+     cy="110"
+     r="19.258783"
+     fill="url(#g)"
+     opacity="0.95"
+     id="circle6"
+     style="fill:url(#linearGradient12);stroke-width:1.48144" />
+  <circle
+     cx="124.81445"
+     cy="110"
+     r="13.333005"
+     fill="#0f131a"
+     opacity="0.35"
+     id="circle7"
+     style="stroke-width:1.48144" />
+  <!-- Small dots for "Linux texture" -->
+  <g
+     opacity="0.55"
+     id="g11"
+     transform="matrix(1.4814449,0,0,1.4814449,-52.958937,-52.958938)">
+    <circle
+       cx="142"
+       cy="104"
+       r="1.7"
+       fill="#c9d2de"
+       id="circle8" />
+    <circle
+       cx="152"
+       cy="114"
+       r="1.7"
+       fill="#c9d2de"
+       id="circle9" />
+    <circle
+       cx="162"
+       cy="104"
+       r="1.7"
+       fill="#c9d2de"
+       id="circle10" />
+    <circle
+       cx="168"
+       cy="114"
+       r="1.7"
+       fill="#c9d2de"
+       id="circle11" />
+  </g>
+  <!-- Text -->
+  <text
+     x="110"
+     y="169.5401"
+     text-anchor="middle"
+     font-family="system-ui, '-apple-system', 'Segoe UI', Roboto, Arial"
+     font-size="18.32px"
+     fill="#d7e3f2"
+     id="text11"
+     style="stroke-width:1.145">Reducir Disco</text>
 </svg>
