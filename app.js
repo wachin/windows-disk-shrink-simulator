@@ -41,6 +41,23 @@ function toInt(v){
 function clamp(n, min, max){ return Math.min(max, Math.max(min, n)); }
 function fmtMB(n){ return String(n); }
 
+function setHandlePositionByWinPct(winPct){
+  // Posiciona el handle usando píxeles y lo “clampa” para que nunca se quede medio fuera.
+  const rect = afterBarEl.getBoundingClientRect();
+  if (!rect.width) {
+    setHandlePositionByWinPct(winPct);
+  return;
+  }
+
+  const handleW = handleEl.getBoundingClientRect().width || 16;
+  const half = handleW / 2;
+
+  const x = (rect.width * (winPct / 100));
+  const xClamped = clamp(x, half, rect.width - half);
+
+  handleEl.style.left = `${xClamped}px`;
+}
+
 function showToast(msg){
   if (!toastEl) return;
   toastEl.textContent = msg;
@@ -113,7 +130,7 @@ function render(){
   afterWinSeg.style.width  = `${winPct}%`;
   afterFreeSeg.style.width = `${freePct}%`;
 
-  handleEl.style.left = `${winPct}%`;
+  setHandlePositionByWinPct(winPct);
   handleEl.setAttribute("aria-valuenow", String(shrink));
 
   shrinkEl.title = `Máximo permitido: ${fmtMB(maxShrink)} MB`;
@@ -122,8 +139,17 @@ function render(){
 /* --- Drag sin saltos bruscos --- */
 function percentFromClientX(clientX){
   const rect = afterBarEl.getBoundingClientRect();
-  const x = clamp(clientX - rect.left, 0, rect.width);
-  return rect.width === 0 ? 1 : (x / rect.width);
+  const w = rect.width || 0;
+  if (!w) return 1;
+
+  const handleW = handleEl.getBoundingClientRect().width || 16;
+  const half = handleW / 2;
+
+  // Convertimos clientX a posición del centro del handle, y la clampamos al rango visible
+  const xCenter = clamp(clientX - rect.left, half, w - half);
+
+  // Volvemos a porcentaje 0..1 dentro del ancho total (referencia absoluta de barra)
+  return xCenter / w;
 }
 
 function clampPercentToAllowed(p){

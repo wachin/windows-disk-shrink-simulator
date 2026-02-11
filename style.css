@@ -264,3 +264,5 @@ input[type="number"]:focus{border-color: rgba(31,92,255,.7); box-shadow: 0 0 0 3
 }
 .legal a{ color: rgba(255,255,255,.9); text-decoration: none; }
 .legal a:hover{ text-decoration: underline; }
+
+.subtle{opacity:.85}
