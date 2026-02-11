@@ -1,201 +1,145 @@
-(() => {
-  const $ = (id) => document.getElementById(id);
+/**
+ * Simulador de "Reducir volumen" (Windows 10)
+ * - Total antes (MB): el usuario lo escribe
+ * - Disponible para reducir (MB): el usuario lo escribe
+ * - Desea reducir (MB): controlado por slider/entrada, solo puede DISMINUIR desde el máximo
+ * - Total después (MB) = totalAntes - reducir
+ *
+ * Nota: Windows muestra MB sin separadores de miles, por eso aquí también.
+ */
 
-  const beforeMb = $("beforeMb");
-  const availableMb = $("availableMb");
-  const reduceMb = $("reduceMb");
-  const reduceSlider = $("reduceSlider");
-  const afterMb = $("afterMb");
-  const status = $("status");
+const $ = (id) => document.getElementById(id);
 
-  const pasteBefore = $("pasteBefore");
-  const pasteAvail = $("pasteAvail");
-  const maxReduce = $("maxReduce");
-  const copyAfter = $("copyAfter");
+const totalBeforeEl = $("totalBefore");
+const availableEl   = $("available");
+const shrinkEl      = $("shrink");
+const sliderEl      = $("slider");
+const maxBtnEl      = $("maxBtn");
 
-  // Quita todo lo que no sea dígito.
-  // Además: Windows muestra MB sin separadores (sin puntos/comas), así que lo forzamos.
-  function toIntMB(value) {
-    const s = String(value ?? "").replace(/[^\d]/g, "");
-    if (!s) return NaN;
-    // Evita números absurdamente largos por pegados raros
-    if (s.length > 12) return NaN;
-    return Number.parseInt(s, 10);
-  }
+const totalAfterEl  = $("totalAfter");
+const linuxSpaceEl  = $("linuxSpace");
 
-  function setMB(input, n) {
-    if (!Number.isFinite(n)) {
-      input.value = "";
-      return;
-    }
-    // Sin puntos, sin comas.
-    input.value = String(Math.max(0, Math.trunc(n)));
-  }
+const beforeTotalEl = $("beforeTotal");
+const afterWinMBEl  = $("afterWinMB");
+const afterLinuxMBEl= $("afterLinuxMB");
 
-  function clamp(n, min, max) {
-    if (!Number.isFinite(n)) return min;
-    return Math.min(max, Math.max(min, n));
-  }
+const afterWinSeg   = $("afterWin");
+const afterFreeSeg  = $("afterFree");
+const handleEl      = $("handle");
 
-  function explain(before, available, reduce, after) {
-    const okNumbers = Number.isFinite(before) && Number.isFinite(available);
-    if (!okNumbers) {
-      status.className = "status";
-      status.innerHTML =
-        `👋 Ingresa los dos valores de Windows arriba (en MB, sin puntos).<br>
-         Luego podrás ajustar cuánto <strong>reducir</strong> (hasta el máximo permitido).`;
-      return;
-    }
+function toInt(v){
+  if (v === "" || v === null || v === undefined) return NaN;
+  const n = Number(String(v).trim());
+  if (!Number.isFinite(n)) return NaN;
+  return Math.floor(n);
+}
 
-    // Validaciones básicas (Windows normalmente no te dará available > before, pero mejor avisar).
-    if (available > before) {
-      status.className = "status warn";
-      status.innerHTML =
-        `⚠️ Tus valores parecen raros: el <strong>Disponible</strong> no debería ser mayor que el <strong>Antes</strong>.<br>
-         Aun así, el simulador aplicará la regla: <code>Reducir ≤ Disponible</code>.`;
-      return;
-    }
+function clamp(n, min, max){
+  return Math.min(max, Math.max(min, n));
+}
 
-    // Mensaje principal con cálculo paso a paso
-    status.className = "status ok";
-    const percent = before > 0 ? Math.round((reduce / before) * 100) : 0;
+function fmtMB(n){
+  // Sin separadores (igual que Windows en esta ventana)
+  return String(n);
+}
 
-    status.innerHTML =
-      `✅ Simulación lista (como Windows).<br>
-       • Regla: <strong>Reducir</strong> no puede superar <strong>${available}</strong> MB.<br>
-       • Cálculo: <code>Después = Antes − Reducir</code> → <strong>${before}</strong> − <strong>${reduce}</strong> = <strong>${after}</strong> MB.<br>
-       • Estás recortando aprox. <strong>${percent}%</strong> del tamaño “Antes”.`;
-  }
+function setReduceToMax(){
+  const totalBefore = Math.max(1, toInt(totalBeforeEl.value) || 1);
+  let available = toInt(availableEl.value);
+  if (!Number.isFinite(available) || available < 0) available = 0;
 
-  function recalc({ lockIncrease = true } = {}) {
-    const before = toIntMB(beforeMb.value);
-    const available = toIntMB(availableMb.value);
+  // Windows no puede permitir reducir más que el total-1, pero aquí lo limitamos simple:
+  available = clamp(available, 0, totalBefore - 1);
 
-    // Si no hay datos suficientes, limpiar dependientes
-    if (!Number.isFinite(before) || !Number.isFinite(available)) {
-      reduceSlider.max = "0";
-      reduceSlider.value = "0";
-      reduceMb.value = "";
-      afterMb.value = "";
-      explain(before, available, 0, 0);
-      return;
-    }
+  sliderEl.max = String(available);
+  shrinkEl.max = String(available);
 
-    // Windows: máximo reducible = available (no más)
-    const max = Math.max(0, Math.trunc(available));
+  // al abrir la ventana, Windows suele poner el máximo por defecto
+  sliderEl.value = String(available);
+  shrinkEl.value = String(available);
 
-    // Slider
-    reduceSlider.min = "0";
-    reduceSlider.max = String(max);
+  render();
+}
 
-    // Reduce actual: si el usuario no puso nada, por defecto usamos el máximo (como cuando Windows llena ese campo)
-    let currentReduce = toIntMB(reduceMb.value);
+function syncConstraints(){
+  const totalBefore = Math.max(1, toInt(totalBeforeEl.value) || 1);
 
-    if (!Number.isFinite(currentReduce)) {
-      currentReduce = max;
-    }
+  let available = toInt(availableEl.value);
+  if (!Number.isFinite(available) || available < 0) available = 0;
 
-    // Si lockIncrease está activo, no permitimos que el usuario lo suba por encima del máximo.
-    currentReduce = clamp(currentReduce, 0, max);
+  // No puede ser mayor que totalBefore-1 (para que Windows no quede en 0)
+  available = clamp(available, 0, totalBefore - 1);
+  availableEl.value = String(available);
 
-    // Set values (sin separadores)
-    setMB(reduceMb, currentReduce);
-    reduceSlider.value = String(currentReduce);
+  sliderEl.max = String(available);
+  shrinkEl.max = String(available);
 
-    // After
-    const after = Math.max(0, Math.trunc(before) - currentReduce);
-    setMB(afterMb, after);
+  // Ajustar reduce actual dentro de rango
+  let shrink = toInt(shrinkEl.value);
+  if (!Number.isFinite(shrink) || shrink < 0) shrink = available;
 
-    explain(before, available, currentReduce, after);
-  }
+  shrink = clamp(shrink, 0, available);
+  shrinkEl.value = String(shrink);
+  sliderEl.value = String(shrink);
+}
 
-  // “No aumentar”: si el usuario intenta escribir un número mayor al máximo, lo bajamos inmediatamente.
-  function onReduceInput() {
-    const before = toIntMB(beforeMb.value);
-    const available = toIntMB(availableMb.value);
-    const max = Number.isFinite(available) ? Math.max(0, Math.trunc(available)) : 0;
+function render(){
+  syncConstraints();
 
-    let r = toIntMB(reduceMb.value);
-    if (!Number.isFinite(r)) r = 0;
+  const totalBefore = Math.max(1, toInt(totalBeforeEl.value) || 1);
+  const available = toInt(availableEl.value) || 0;
+  const shrink = toInt(shrinkEl.value) || 0;
 
-    // Aquí se aplica la regla: no subir del máximo.
-    r = clamp(r, 0, max);
-    setMB(reduceMb, r);
-    reduceSlider.value = String(r);
+  // cálculos
+  const totalAfter = totalBefore - shrink;
+  const linuxSpace = shrink;
 
-    // Recalcular después
-    if (Number.isFinite(before)) {
-      const after = Math.max(0, Math.trunc(before) - r);
-      setMB(afterMb, after);
-      explain(before, available, r, after);
-    } else {
-      setMB(afterMb, NaN);
-      explain(before, available, r, 0);
-    }
-  }
+  // textos
+  beforeTotalEl.textContent = `${fmtMB(totalBefore)} MB`;
+  totalAfterEl.textContent  = fmtMB(totalAfter);
+  linuxSpaceEl.textContent  = fmtMB(linuxSpace);
 
-  function onAnyInputSanitize(e) {
-    // Si el usuario pega con puntos/comas/espacios, lo limpiamos al vuelo.
-    const n = toIntMB(e.target.value);
-    if (Number.isFinite(n)) setMB(e.target, n);
-  }
+  afterWinMBEl.textContent   = `${fmtMB(totalAfter)} MB`;
+  afterLinuxMBEl.textContent = `${fmtMB(linuxSpace)} MB`;
 
-  // Clipboard helpers
-  async function pasteInto(input) {
-    try {
-      const text = await navigator.clipboard.readText();
-      input.value = text;
-      onAnyInputSanitize({ target: input });
-      recalc();
-    } catch {
-      // Si el permiso falla, no rompemos nada.
-      input.focus();
-    }
-  }
+  // proporciones (después)
+  const winPct  = (totalAfter / totalBefore) * 100;
+  const freePct = (linuxSpace / totalBefore) * 100;
 
-  async function copyText(text) {
-    try {
-      await navigator.clipboard.writeText(text);
-      status.className = "status ok";
-      status.innerHTML = `✅ Copiado al portapapeles: <strong>${text}</strong>`;
-    } catch {
-      // fallback: seleccionar
-      afterMb.focus();
-      afterMb.select();
-    }
-  }
+  afterWinSeg.style.width  = `${winPct}%`;
+  afterFreeSeg.style.width = `${freePct}%`;
 
-  // Events
-  beforeMb.addEventListener("input", (e) => { onAnyInputSanitize(e); recalc(); });
-  availableMb.addEventListener("input", (e) => { onAnyInputSanitize(e); recalc(); });
+  // handle en la frontera real (porcentaje del Windows)
+  handleEl.style.left = `${winPct}%`;
 
-  reduceMb.addEventListener("input", (e) => {
-    onAnyInputSanitize(e);
-    onReduceInput();
-  });
+  // Mensaje de “límite” en el input (opcional visual)
+  shrinkEl.title = `Máximo permitido: ${fmtMB(available)} MB`;
+  sliderEl.title = shrinkEl.title;
+}
 
-  reduceSlider.addEventListener("input", () => {
-    // slider controla reduce (siempre dentro del rango)
-    const r = Number.parseInt(reduceSlider.value, 10) || 0;
-    setMB(reduceMb, r);
-    recalc();
-  });
+// Eventos
+totalBeforeEl.addEventListener("input", render);
+availableEl.addEventListener("input", render);
 
-  maxReduce.addEventListener("click", () => {
-    const available = toIntMB(availableMb.value);
-    if (Number.isFinite(available)) {
-      setMB(reduceMb, available);
-      recalc();
-    }
-  });
+// Si el usuario escribe manualmente el valor de reducir:
+shrinkEl.addEventListener("input", () => {
+  // no permitir que escriba más que el máximo
+  const max = toInt(sliderEl.max) || 0;
+  let v = toInt(shrinkEl.value);
+  if (!Number.isFinite(v)) v = max;
+  v = clamp(v, 0, max);
+  shrinkEl.value = String(v);
+  sliderEl.value = String(v);
+  render();
+});
 
-  pasteBefore.addEventListener("click", () => pasteInto(beforeMb));
-  pasteAvail.addEventListener("click", () => pasteInto(availableMb));
+// Slider: con direction: rtl, mover a la derecha disminuye
+sliderEl.addEventListener("input", () => {
+  shrinkEl.value = sliderEl.value;
+  render();
+});
 
-  copyAfter.addEventListener("click", () => {
-    if (afterMb.value) copyText(afterMb.value);
-  });
+maxBtnEl.addEventListener("click", setReduceToMax);
 
-  // Init
-  recalc();
-})();
+// Inicial
+setReduceToMax();
