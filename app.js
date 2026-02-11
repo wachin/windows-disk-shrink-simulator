@@ -1,239 +1,359 @@
+(() => {
+  const $ = (id) => document.getElementById(id);
 
-/**
- * Simulador de "Reducir volumen" (Windows 10)
- * - Total antes (MB): el usuario lo escribe
- * - Disponible para reducir (MB): el usuario lo escribe (Windows lo calcula)
- * - Desea reducir (MB): inicia AUTOMÁTICAMENTE igual a "Disponible"
- *   y el usuario solo puede DISMINUIR (como en Windows).
- * - Total después (MB) = totalAntes - reducir
- *
- * Los números se muestran en MB sin separadores.
- */
+  const totalBeforeEl = $("totalBefore");
+  const availableEl   = $("available");
+  const desiredEl     = $("desired");
+  const totalAfterEl  = $("totalAfter");
 
-const $ = (id) => document.getElementById(id);
+  const winMbEl = $("winMb");
+  const linMbEl = $("linMb");
 
-const totalBeforeEl = $("totalBefore");
-const availableEl   = $("available");
-const shrinkEl      = $("shrink");
-const maxBtnEl      = $("maxBtn");
-const copyBtnEl     = $("copyBtn");
-const toastEl       = $("toast");
+  const barWrap = $("barWrap");
+  const bar = $("bar");
+  const segWin = $("segWin");
+  const segLin = $("segLin");
+  const handle = $("handle");
+  const barHint = $("barHint");
 
-const totalAfterEl  = $("totalAfter");
-const linuxSpaceEl  = $("linuxSpace");
+  const copyBtn = $("copyBtn");
 
-const beforeTotalEl = $("beforeTotal");
-const afterWinMBEl  = $("afterWinMB");
-const afterLinuxMBEl= $("afterLinuxMB");
+  const statusText = $("statusText");
+  const warnBox = $("warnBox");
+  const warnText = $("warnText");
 
-const afterBarEl    = $("afterBar");
-const afterWinSeg   = $("afterWin");
-const afterFreeSeg  = $("afterFree");
-const handleEl      = $("handle");
-
-let maxShrink = 0;
-let userTouchedShrink = false;
-
-function toInt(v){
-  const n = Number(String(v ?? "").trim());
-  return Number.isFinite(n) ? Math.floor(n) : NaN;
-}
-function clamp(n, min, max){ return Math.min(max, Math.max(min, n)); }
-function fmtMB(n){ return String(n); }
-
-function setHandlePositionByWinPct(winPct){
-  // Posiciona el handle usando píxeles y lo “clampa” para que nunca se quede medio fuera.
-  const rect = afterBarEl.getBoundingClientRect();
-  if (!rect.width) {
-    setHandlePositionByWinPct(winPct);
-  return;
+  const required = [totalBeforeEl, availableEl, desiredEl, totalAfterEl, winMbEl, linMbEl, barWrap, bar, segWin, segLin, handle, barHint, copyBtn, statusText, warnBox, warnText];
+  if (required.some((x) => !x)) {
+    console.error("[Reducir Disco] Faltan elementos en el DOM. Revisa IDs.");
+    return;
   }
 
-  const handleW = handleEl.getBoundingClientRect().width || 16;
-  const half = handleW / 2;
+  // ---------------------------
+  // Reglas (Windows-like)
+  // - "Espacio disponible" define el MÁXIMO permitido.
+  // - Al cambiar "Espacio disponible", Windows pone por defecto "Desea reducir" = máximo.
+  // - Luego el usuario puede ajustar libremente dentro de [0 .. máximo].
+  // ---------------------------
 
-  const x = (rect.width * (winPct / 100));
-  const xClamped = clamp(x, half, rect.width - half);
+  let maxShrink = null;
+  let desired = null;
+  let lastAvailableDigits = "";
 
-  handleEl.style.left = `${xClamped}px`;
-}
+  // ---------- Utils ----------
+  const digitsOnly = (s) => (s ?? "").toString().replace(/[^\d]/g, "");
+  const toIntOrNull = (s) => {
+    const d = digitsOnly(s);
+    if (!d) return null;
+    const n = Number(d);
+    if (!Number.isFinite(n)) return null;
+    return Math.floor(n);
+  };
+  const fmt = (n) => (n == null || !Number.isFinite(n)) ? "" : String(Math.floor(n)); // sin comas/puntos
+  const clamp = (n, lo, hi) => Math.min(hi, Math.max(lo, n));
 
-function showToast(msg){
-  if (!toastEl) return;
-  toastEl.textContent = msg;
-  toastEl.classList.add("show");
-  clearTimeout(showToast._t);
-  showToast._t = setTimeout(() => toastEl.classList.remove("show"), 1400);
-}
-
-function computeConstraints(){
-  const totalBefore = Math.max(1, toInt(totalBeforeEl.value) || 1);
-
-  let available = toInt(availableEl.value);
-  if (!Number.isFinite(available) || available < 0) available = 0;
-
-  // Nunca permitir que "Disponible" sea mayor que totalBefore-1
-  available = clamp(available, 0, totalBefore - 1);
-  availableEl.value = String(available);
-
-  maxShrink = available;
-
-  // input reduce limitado al máximo
-  shrinkEl.min = "0";
-  shrinkEl.max = String(maxShrink);
-
-  // ARIA del handle
-  handleEl.setAttribute("aria-valuemin", "0");
-  handleEl.setAttribute("aria-valuemax", String(maxShrink));
-
-  return { totalBefore, available };
-}
-
-function setShrink(v, {fromUser=false} = {}){
-  computeConstraints();
-  let value = toInt(v);
-  if (!Number.isFinite(value)) value = maxShrink;
-
-  value = clamp(value, 0, maxShrink);
-
-  if (fromUser) userTouchedShrink = true;
-
-  shrinkEl.value = String(value);
-  render();
-}
-
-function setShrinkToMax({resetUserTouched=false} = {}){
-  if (resetUserTouched) userTouchedShrink = false;
-  setShrink(maxShrink, {fromUser:false});
-}
-
-function render(){
-  const { totalBefore } = computeConstraints();
-
-  let shrink = toInt(shrinkEl.value);
-  if (!Number.isFinite(shrink)) shrink = maxShrink;
-  shrink = clamp(shrink, 0, maxShrink);
-  shrinkEl.value = String(shrink);
-
-  const totalAfter = totalBefore - shrink;
-
-  beforeTotalEl.textContent = `${fmtMB(totalBefore)} MB`;
-  totalAfterEl.textContent  = fmtMB(totalAfter);
-  linuxSpaceEl.textContent  = fmtMB(shrink);
-
-  afterWinMBEl.textContent   = `${fmtMB(totalAfter)} MB`;
-  afterLinuxMBEl.textContent = `${fmtMB(shrink)} MB`;
-
-  const winPct  = (totalAfter / totalBefore) * 100;
-  const freePct = (shrink / totalBefore) * 100;
-
-  afterWinSeg.style.width  = `${winPct}%`;
-  afterFreeSeg.style.width = `${freePct}%`;
-
-  setHandlePositionByWinPct(winPct);
-  handleEl.setAttribute("aria-valuenow", String(shrink));
-
-  shrinkEl.title = `Máximo permitido: ${fmtMB(maxShrink)} MB`;
-}
-
-/* --- Drag sin saltos bruscos --- */
-function percentFromClientX(clientX){
-  const rect = afterBarEl.getBoundingClientRect();
-  const w = rect.width || 0;
-  if (!w) return 1;
-
-  const handleW = handleEl.getBoundingClientRect().width || 16;
-  const half = handleW / 2;
-
-  // Convertimos clientX a posición del centro del handle, y la clampamos al rango visible
-  const xCenter = clamp(clientX - rect.left, half, w - half);
-
-  // Volvemos a porcentaje 0..1 dentro del ancho total (referencia absoluta de barra)
-  return xCenter / w;
-}
-
-function clampPercentToAllowed(p){
-  const { totalBefore } = computeConstraints();
-  const pMin = 1 - (maxShrink / totalBefore); // reduce = maxShrink
-  const pMax = 1;                             // reduce = 0
-  return clamp(p, pMin, pMax);
-}
-
-function shrinkFromPercent(p){
-  const { totalBefore } = computeConstraints();
-  // p = totalAfter/totalBefore = 1 - shrink/totalBefore  => shrink = totalBefore*(1-p)
-  let shrink = Math.round(totalBefore * (1 - p));
-  return clamp(shrink, 0, maxShrink);
-}
-
-let dragging = false;
-
-function startDrag(e){
-  dragging = true;
-  userTouchedShrink = true;
-  afterBarEl.setPointerCapture?.(e.pointerId);
-  moveDrag(e);
-}
-function moveDrag(e){
-  if (!dragging) return;
-  const p = clampPercentToAllowed(percentFromClientX(e.clientX));
-  const shrink = shrinkFromPercent(p);
-  shrinkEl.value = String(shrink);
-  render();
-}
-function endDrag(e){
-  dragging = false;
-  afterBarEl.releasePointerCapture?.(e.pointerId);
-}
-
-afterBarEl.addEventListener("pointerdown", startDrag);
-afterBarEl.addEventListener("pointermove", moveDrag);
-afterBarEl.addEventListener("pointerup", endDrag);
-afterBarEl.addEventListener("pointercancel", endDrag);
-
-// Teclado (para accesibilidad): ← aumenta (hasta máx), → disminuye
-handleEl.addEventListener("keydown", (e) => {
-  const cur = toInt(shrinkEl.value) || 0;
-  if (e.key === "ArrowRight") { e.preventDefault(); setShrink(cur - 1, {fromUser:true}); }
-  if (e.key === "ArrowLeft")  { e.preventDefault(); setShrink(cur + 1, {fromUser:true}); }
-  if (e.key === "Home")       { e.preventDefault(); setShrinkToMax(); }
-  if (e.key === "End")        { e.preventDefault(); setShrink(0, {fromUser:true}); }
-});
-
-// Input manual
-shrinkEl.addEventListener("input", () => setShrink(shrinkEl.value, {fromUser:true}));
-
-// Si cambia "Total antes": si el usuario no tocó la reducción, reset a máximo (como Windows al abrir)
-totalBeforeEl.addEventListener("input", () => {
-  computeConstraints();
-  if (!userTouchedShrink) setShrinkToMax();
-  else render();
-});
-
-// Si cambia "Disponible": Windows rellena automáticamente el campo de reducción con ese valor
-availableEl.addEventListener("input", () => {
-  computeConstraints();
-  setShrinkToMax();
-});
-
-maxBtnEl.addEventListener("click", () => setShrinkToMax());
-
-// Copiar al portapapeles
-copyBtnEl.addEventListener("click", async () => {
-  const v = fmtMB(toInt(shrinkEl.value) || 0);
-  try{
-    await navigator.clipboard.writeText(v);
-    showToast("✅ Copiado al portapapeles");
-  }catch{
-    // fallback
-    shrinkEl.focus();
-    shrinkEl.select?.();
-    document.execCommand?.("copy");
-    showToast("✅ Copiado");
+  function setWarning(msg) {
+    if (!msg) {
+      warnBox.hidden = true;
+      warnText.textContent = "";
+      return;
+    }
+    warnBox.hidden = false;
+    warnText.textContent = msg;
   }
-});
 
-// Inicio: simula Windows (Reducir inicia en el máximo permitido)
-computeConstraints();
-setShrinkToMax({resetUserTouched:true});
-render();
+  function setStatus(msg) {
+    statusText.textContent = msg;
+  }
+
+  function setHandleAria(text) {
+    handle.setAttribute("aria-valuemin", "0");
+    handle.setAttribute("aria-valuemax", String(maxShrink ?? 0));
+    handle.setAttribute("aria-valuenow", String(desired ?? 0));
+    handle.setAttribute("aria-valuetext", text);
+  }
+
+  function updateLegend(winAfter, linuxSpace) {
+    winMbEl.textContent = winAfter == null ? "— MB" : `${fmt(winAfter)} MB`;
+    linMbEl.textContent = linuxSpace == null ? "— MB" : `${fmt(linuxSpace)} MB`;
+  }
+
+  function updateBarEmpty() {
+    segWin.style.width = "50%";
+    segLin.style.width = "50%";
+    handle.style.left = "50%";
+    handle.disabled = true;
+    barHint.textContent = "Ingresa valores para activar el divisor.";
+    updateLegend(null, null);
+    setHandleAria("Sin datos");
+    copyBtn.disabled = true;
+  }
+
+  function enableBar() {
+    handle.disabled = false;
+    barHint.textContent = "Arrastra el divisor azul para ajustar el espacio a reducir (0..máximo).";
+    copyBtn.disabled = !digitsOnly(desiredEl.value);
+  }
+
+  function setHandleLeftClampedPct(pct) {
+    // pct es el porcentaje "real" del borde Windows/Linux.
+    // Visualmente, si queda en 0% o 100% el handle se sale por el translate(-50%),
+    // así que lo "encerramos" dentro de la barra SIN cambiar los cálculos.
+    const rect = bar.getBoundingClientRect();
+    const barW = rect.width || 1;
+    const handleW = handle.offsetWidth || 46; // fallback
+    const half = handleW / 2;
+
+    // Convert pct -> px y clamp a [half .. barW-half]
+    const rawX = (pct / 100) * barW;
+    const clampedX = clamp(rawX, half, barW - half);
+
+    // Convert de nuevo a porcentaje para CSS left:
+    const clampedPct = (clampedX / barW) * 100;
+    handle.style.left = `${clampedPct}%`;
+  }
+
+  function renderProportional(totalBefore, winAfter) {
+    const tb = totalBefore;
+    const winPct = tb <= 0 ? 0 : (winAfter / tb) * 100;
+    const linPct = 100 - winPct;
+
+    segWin.style.width = `${winPct}%`;
+    segLin.style.width = `${linPct}%`;
+
+    // handle clamped so it never disappears off the bar
+    setHandleLeftClampedPct(winPct);
+  }
+
+  // ---------- Core recompute ----------
+  function recompute({ fromDesiredEdit = false } = {}) {
+    setWarning("");
+
+    totalBeforeEl.value = digitsOnly(totalBeforeEl.value);
+    availableEl.value = digitsOnly(availableEl.value);
+    desiredEl.value = digitsOnly(desiredEl.value);
+
+    const totalBefore = toIntOrNull(totalBeforeEl.value);
+    const available = toIntOrNull(availableEl.value);
+
+    if (available == null || available <= 0) {
+      maxShrink = null;
+      desired = null;
+      desiredEl.value = "";
+      totalAfterEl.value = "";
+      updateBarEmpty();
+
+      if (totalBefore == null) setStatus("Escribe los dos primeros valores (en MB) para iniciar.");
+      else setStatus("Ahora escribe el “Espacio disponible para la reducción (MB)” para que Windows calcule el máximo.");
+      return;
+    }
+
+    const availDigits = digitsOnly(availableEl.value);
+    const availableChanged = availDigits !== lastAvailableDigits;
+    if (availableChanged) lastAvailableDigits = availDigits;
+
+    maxShrink = available;
+
+    if (availableChanged || desired == null) {
+      desired = maxShrink;
+      desiredEl.value = fmt(desired);
+    }
+
+    if (fromDesiredEdit) {
+      const typed = toIntOrNull(desiredEl.value);
+      if (typed == null) {
+        desiredEl.value = fmt(desired);
+      } else {
+        desired = clamp(typed, 0, maxShrink);
+        desiredEl.value = fmt(desired);
+      }
+    }
+
+    if (totalBefore != null && totalBefore > 0) {
+      if (maxShrink > totalBefore) {
+        setWarning("El “Espacio disponible” no puede ser mayor que el “Tamaño total antes”. Revisa los valores en Windows.");
+      }
+
+      if (desired > totalBefore) {
+        desired = totalBefore;
+        desiredEl.value = fmt(desired);
+        setWarning("El valor a reducir no puede ser mayor que el tamaño total antes.");
+      }
+
+      const winAfter = totalBefore - desired;
+      if (winAfter < 0) {
+        totalAfterEl.value = "";
+        updateBarEmpty();
+        setWarning("Los valores producen un resultado imposible (después < 0). Revisa lo ingresado.");
+        setStatus("Revisa los valores: después de reducir no puede quedar negativo.");
+        return;
+      }
+
+      totalAfterEl.value = fmt(winAfter);
+      updateLegend(winAfter, desired);
+      renderProportional(totalBefore, winAfter);
+      enableBar();
+      setHandleAria(`Reducir ${fmt(desired)} MB (máximo ${fmt(maxShrink)} MB)`);
+
+      // Mensajes educativos: cuando queda MUY poco para Windows, el divisor va casi al inicio.
+      const winPct = (winAfter / totalBefore) * 100;
+      if (winPct < 8) {
+        setStatus(`⚠️ Estás dejando muy poco espacio a Windows (${fmt(winAfter)} MB). Por eso el divisor queda casi al inicio (izquierda).`);
+      } else if (desired === maxShrink) {
+        setStatus("🟦 Valor al máximo permitido. Puedes ajustarlo dentro del rango (0..máximo) como en Windows.");
+      } else if (desired === 0) {
+        setStatus("ℹ️ En 0 MB no estás reduciendo nada: no quedará espacio libre para Linux.");
+      } else {
+        setStatus("✅ Ajusta el valor dentro del rango permitido. A la derecha verás cuánto espacio quedará libre para Linux.");
+      }
+    } else {
+      totalAfterEl.value = "";
+      updateLegend(null, desired);
+
+      // Visual neutral when no totalBefore: keep handle centered and clamped
+      segWin.style.width = "60%";
+      segLin.style.width = "40%";
+      setHandleLeftClampedPct(60);
+
+      enableBar();
+      barHint.textContent = "Para proporción exacta, completa “Tamaño total antes”.";
+      setHandleAria(`Reducir ${fmt(desired)} MB (sin tamaño total)`);
+      setStatus("✅ Ya hay un máximo para reducir. Ahora escribe “Tamaño total antes” para ver la barra proporcional.");
+    }
+  }
+
+  // ---------- Copy ----------
+  copyBtn.addEventListener("click", async () => {
+    const val = digitsOnly(desiredEl.value);
+    if (!val) return;
+
+    try {
+      await navigator.clipboard.writeText(val);
+      copyBtn.textContent = "¡Copiado!";
+      setStatus("📋 Copiado al portapapeles.");
+      setTimeout(() => (copyBtn.textContent = "Copiar"), 900);
+    } catch {
+      desiredEl.focus();
+      desiredEl.select();
+      document.execCommand("copy");
+      copyBtn.textContent = "Copiado";
+      setTimeout(() => (copyBtn.textContent = "Copiar"), 900);
+    }
+  });
+
+  // ---------- Inputs ----------
+  const bindInput = (inputEl, handler) => {
+    inputEl.addEventListener("input", handler);
+    inputEl.addEventListener("change", handler);
+    inputEl.addEventListener("keyup", handler);
+    inputEl.addEventListener("paste", () => setTimeout(handler, 0));
+  };
+
+  bindInput(totalBeforeEl, () => recompute());
+  bindInput(availableEl, () => recompute());
+  bindInput(desiredEl, () => recompute({ fromDesiredEdit: true }));
+
+  // ---------- Drag handle ----------
+  let dragging = false;
+
+  const barClientXToDesired = (clientX) => {
+    const totalBefore = toIntOrNull(totalBeforeEl.value);
+    const rect = bar.getBoundingClientRect();
+    const x = clamp(clientX - rect.left, 0, rect.width);
+    const pct = rect.width === 0 ? 0 : (x / rect.width);
+
+    if (totalBefore == null || totalBefore <= 0) {
+      const candidate = Math.round((1 - pct) * (maxShrink ?? 0));
+      return clamp(candidate, 0, maxShrink ?? 0);
+    }
+
+    const candidate = Math.round((1 - pct) * totalBefore);
+    return clamp(candidate, 0, maxShrink ?? 0);
+  };
+
+  const beginDrag = (clientX) => {
+    if (handle.disabled) return;
+    dragging = true;
+    document.body.classList.add("dragging");
+    moveDrag(clientX);
+  };
+
+  const endDrag = () => {
+    dragging = false;
+    document.body.classList.remove("dragging");
+  };
+
+  const moveDrag = (clientX) => {
+    if (!dragging) return;
+    desired = barClientXToDesired(clientX);
+    desiredEl.value = fmt(desired);
+    recompute();
+  };
+
+  handle.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    beginDrag(e.clientX);
+  });
+  window.addEventListener("mousemove", (e) => moveDrag(e.clientX));
+  window.addEventListener("mouseup", endDrag);
+
+  handle.addEventListener("touchstart", (e) => {
+    if (!e.touches?.length) return;
+    beginDrag(e.touches[0].clientX);
+  }, { passive: true });
+
+  window.addEventListener("touchmove", (e) => {
+    if (!e.touches?.length) return;
+    moveDrag(e.touches[0].clientX);
+  }, { passive: true });
+
+  window.addEventListener("touchend", endDrag);
+
+  // Click en la barra: ajusta directamente
+  barWrap.addEventListener("mousedown", (e) => {
+    if (handle.disabled) return;
+    if (e.target === handle || handle.contains(e.target)) return;
+
+    desired = barClientXToDesired(e.clientX);
+    desiredEl.value = fmt(desired);
+    recompute();
+  });
+
+  // Teclado accesible:
+  // ArrowLeft = mover divisor hacia la izquierda = reducir MÁS (desired aumenta)
+  // ArrowRight = mover divisor hacia la derecha = reducir MENOS (desired baja)
+  handle.addEventListener("keydown", (e) => {
+    if (handle.disabled) return;
+    const step = e.shiftKey ? 128 : 16;
+
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      desired = clamp((desired ?? 0) + step, 0, maxShrink ?? 0);
+      desiredEl.value = fmt(desired);
+      recompute();
+      return;
+    }
+    if (e.key === "ArrowRight") {
+      e.preventDefault();
+      desired = clamp((desired ?? 0) - step, 0, maxShrink ?? 0);
+      desiredEl.value = fmt(desired);
+      recompute();
+      return;
+    }
+    if (e.key === "Home") {
+      e.preventDefault();
+      desired = 0;
+      desiredEl.value = "0";
+      recompute();
+    }
+    if (e.key === "End") {
+      e.preventDefault();
+      desired = maxShrink ?? 0;
+      desiredEl.value = fmt(desired);
+      recompute();
+    }
+  });
+
+  // Init
+  updateBarEmpty();
+  setStatus("Escribe los dos primeros valores (en MB) para iniciar.");
+})();
