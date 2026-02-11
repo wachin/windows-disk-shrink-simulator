@@ -1,5 +1,4 @@
 (() => {
-  // Robust init: if any element is missing, show a clear console error.
   const $ = (id) => document.getElementById(id);
 
   const totalBeforeEl = $("totalBefore");
@@ -25,19 +24,20 @@
 
   const required = [totalBeforeEl, availableEl, desiredEl, totalAfterEl, winMbEl, linMbEl, barWrap, bar, segWin, segLin, handle, barHint, copyBtn, statusText, warnBox, warnText];
   if (required.some((x) => !x)) {
-    console.error("[Reducir Disco] Faltan elementos en el DOM. Revisa que los IDs de index.html coincidan con app.js.");
+    console.error("[Reducir Disco] Faltan elementos en el DOM. Revisa IDs.");
     return;
   }
 
   // ---------------------------
-  // Reglas (Windows-like)
-  // - Al escribir "Espacio disponible", el campo "Desea reducir" se copia igual.
-  // - Luego SOLO puede DISMINUIR (nunca aumentar) el valor a reducir.
+  // Reglas (Windows-like, corregido)
+  // - "Espacio disponible" define el MÁXIMO permitido.
+  // - Al escribir/cambiar "Espacio disponible", Windows pone por defecto "Desea reducir" = máximo.
+  // - Luego el usuario puede mover/editar libremente dentro de [0 .. máximo].
+  //   (Windows sí permite subir/bajar, solo NO permite pasar del máximo)
   // ---------------------------
 
   let maxShrink = null;      // Espacio disponible (máximo permitido)
   let desired = null;        // Valor actual a reducir
-  let ceiling = null;        // Techo permitido para el valor (solo baja). Se resetea cuando cambia "available".
   let lastAvailableDigits = ""; // detecta cambio real
 
   // ---------- Utils ----------
@@ -91,11 +91,11 @@
 
   function enableBar() {
     handle.disabled = false;
-    barHint.textContent = "Arrastra el divisor azul para DISMINUIR el espacio a reducir.";
+    barHint.textContent = "Arrastra el divisor azul para ajustar el espacio a reducir (0..máximo).";
     copyBtn.disabled = !digitsOnly(desiredEl.value);
   }
 
-  function renderProportional(totalBefore, winAfter, linuxSpace) {
+  function renderProportional(totalBefore, winAfter) {
     const tb = totalBefore;
     const winPct = tb <= 0 ? 0 : (winAfter / tb) * 100;
     const linPct = 100 - winPct;
@@ -118,56 +118,38 @@
     const available = toIntOrNull(availableEl.value);
 
     if (available == null || available <= 0) {
-      // Sin "disponible" no hay simulación real
       maxShrink = null;
       desired = null;
-      ceiling = null;
       desiredEl.value = "";
       totalAfterEl.value = "";
       updateBarEmpty();
 
-      if (totalBefore == null) {
-        setStatus("Escribe los dos primeros valores (en MB) para iniciar.");
-      } else {
-        setStatus("Ahora escribe el “Espacio disponible para la reducción (MB)” para que Windows pueda calcular el máximo.");
-      }
+      if (totalBefore == null) setStatus("Escribe los dos primeros valores (en MB) para iniciar.");
+      else setStatus("Ahora escribe el “Espacio disponible para la reducción (MB)” para que Windows calcule el máximo.");
       return;
     }
 
-    // Detectar cambio de available (como cuando Windows recalcula)
+    // Detectar cambio de available
     const availDigits = digitsOnly(availableEl.value);
     const availableChanged = availDigits !== lastAvailableDigits;
     if (availableChanged) lastAvailableDigits = availDigits;
 
     maxShrink = available;
 
-    // Windows-like: al cambiar available, desired se resetea al máximo (y el techo también)
-    if (availableChanged || desired == null || ceiling == null) {
+    // Windows-like: al cambiar available, desired se resetea al máximo
+    if (availableChanged || desired == null) {
       desired = maxShrink;
-      ceiling = maxShrink;
       desiredEl.value = fmt(desired);
     }
 
-    // Edit manual del desired
+    // Edit manual del desired: permitir subir/bajar dentro de [0..maxShrink]
     if (fromDesiredEdit) {
       const typed = toIntOrNull(desiredEl.value);
-
       if (typed == null) {
-        // no permitir vacío: volver a último
         desiredEl.value = fmt(desired);
       } else {
-        // Nunca mayor que el máximo disponible
-        let candidate = clamp(typed, 0, maxShrink);
-
-        // Regla clave: nunca aumentar (candidate <= ceiling)
-        if (candidate > ceiling) {
-          desiredEl.value = fmt(desired);
-          setStatus("⛔ No puedes aumentar el valor a reducir. Solo disminuirlo, como en Windows.");
-        } else {
-          desired = candidate;
-          ceiling = candidate; // una vez baja, ese es el nuevo techo
-          desiredEl.value = fmt(desired);
-        }
+        desired = clamp(typed, 0, maxShrink);
+        desiredEl.value = fmt(desired);
       }
     }
 
@@ -180,7 +162,6 @@
       // Evitar desired > totalBefore por consistencia
       if (desired > totalBefore) {
         desired = totalBefore;
-        ceiling = Math.min(ceiling, desired);
         desiredEl.value = fmt(desired);
         setWarning("El valor a reducir no puede ser mayor que el tamaño total antes.");
       }
@@ -196,19 +177,20 @@
 
       totalAfterEl.value = fmt(winAfter);
       updateLegend(winAfter, desired);
-      renderProportional(totalBefore, winAfter, desired);
+      renderProportional(totalBefore, winAfter);
       enableBar();
       setHandleAria(`Reducir ${fmt(desired)} MB (máximo ${fmt(maxShrink)} MB)`);
 
+      // Mensajes UX
       if (desired === maxShrink) {
-        setStatus("🟦 Windows inicia al máximo posible. Ahora arrastra el divisor o reduce el número si quieres dejar más espacio a Windows.");
+        setStatus("🟦 Valor al máximo permitido. Puedes reducirlo (hacia la derecha) o aumentarlo hasta este máximo (hacia la izquierda) como en Windows.");
       } else if (desired === 0) {
         setStatus("ℹ️ En 0 MB no estás reduciendo nada: no quedará espacio libre para Linux.");
       } else {
-        setStatus("✅ Estás reduciendo el volumen. La derecha quedará vacía y podrás crear una partición para Linux después.");
+        setStatus("✅ Ajusta el valor dentro del rango permitido. A la derecha verás cuánto espacio quedará libre para Linux.");
       }
     } else {
-      // Si no hay totalBefore todavía, activamos el simulador numérico pero no proporcional exacto
+      // Sin totalBefore: no podemos proporción exacta
       totalAfterEl.value = "";
       updateLegend(null, desired);
       segWin.style.width = "60%";
@@ -252,7 +234,7 @@
   bindInput(availableEl, () => recompute());
   bindInput(desiredEl, () => recompute({ fromDesiredEdit: true }));
 
-  // ---------- Drag handle (solo disminuir) ----------
+  // ---------- Drag handle ----------
   let dragging = false;
 
   const barClientXToDesired = (clientX) => {
@@ -262,13 +244,12 @@
     const pct = rect.width === 0 ? 0 : (x / rect.width);
 
     if (totalBefore == null || totalBefore <= 0) {
-      // aprox: más a la derecha = menos reducir
+      // aprox
       const candidate = Math.round((1 - pct) * (maxShrink ?? 0));
       return clamp(candidate, 0, maxShrink ?? 0);
     }
 
-    // winPct = winAfter/totalBefore = (totalBefore - desired)/totalBefore = 1 - desired/totalBefore
-    // pct aquí representa winPct, entonces desired = (1 - pct)*totalBefore
+    // desired = (1 - winPct) * totalBefore; donde winPct ~ pct
     const candidate = Math.round((1 - pct) * totalBefore);
     return clamp(candidate, 0, maxShrink ?? 0);
   };
@@ -277,7 +258,6 @@
     if (handle.disabled) return;
     dragging = true;
     document.body.classList.add("dragging");
-    // aplica inmediatamente para que se sienta “real”
     moveDrag(clientX);
   };
 
@@ -288,13 +268,7 @@
 
   const moveDrag = (clientX) => {
     if (!dragging) return;
-    const candidate = barClientXToDesired(clientX);
-
-    // SOLO DISMINUIR: candidate <= ceiling
-    if (candidate > (ceiling ?? 0)) return;
-
-    desired = candidate;
-    ceiling = candidate;
+    desired = barClientXToDesired(clientX);
     desiredEl.value = fmt(desired);
     recompute(); // render
   };
@@ -319,38 +293,31 @@
 
   window.addEventListener("touchend", endDrag);
 
-  // Click en la barra: mueve el divisor, respetando “solo disminuir”
+  // Click en la barra: ajusta directamente (dentro del rango)
   barWrap.addEventListener("mousedown", (e) => {
     if (handle.disabled) return;
     if (e.target === handle || handle.contains(e.target)) return;
 
-    const candidate = barClientXToDesired(e.clientX);
-    if (candidate > (ceiling ?? 0)) {
-      setStatus("⛔ Ese movimiento aumentaría el valor. Solo se permite disminuir.");
-      return;
-    }
-    desired = candidate;
-    ceiling = candidate;
+    desired = barClientXToDesired(e.clientX);
     desiredEl.value = fmt(desired);
     recompute();
   });
 
-  // Teclado accesible en el handle: ArrowLeft disminuye; ArrowRight bloqueado
+  // Teclado accesible en el handle: ArrowLeft/Right ajustan dentro del rango
   handle.addEventListener("keydown", (e) => {
     if (handle.disabled) return;
-
     const step = e.shiftKey ? 128 : 16;
-    if (e.key === "ArrowRight") {
-      e.preventDefault();
-      setStatus("⛔ Flecha derecha aumentaría el valor. No está permitido.");
-      return;
-    }
+
     if (e.key === "ArrowLeft") {
       e.preventDefault();
-      const candidate = clamp((desired ?? 0) - step, 0, maxShrink ?? 0);
-      if (candidate > (ceiling ?? 0)) return;
-      desired = candidate;
-      ceiling = candidate;
+      desired = clamp((desired ?? 0) + step, 0, maxShrink ?? 0); // izquierda = más reducir
+      desiredEl.value = fmt(desired);
+      recompute();
+      return;
+    }
+    if (e.key === "ArrowRight") {
+      e.preventDefault();
+      desired = clamp((desired ?? 0) - step, 0, maxShrink ?? 0); // derecha = menos reducir
       desiredEl.value = fmt(desired);
       recompute();
       return;
@@ -358,8 +325,13 @@
     if (e.key === "Home") {
       e.preventDefault();
       desired = 0;
-      ceiling = 0;
       desiredEl.value = "0";
+      recompute();
+    }
+    if (e.key === "End") {
+      e.preventDefault();
+      desired = maxShrink ?? 0;
+      desiredEl.value = fmt(desired);
       recompute();
     }
   });
