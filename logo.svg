@@ -88,7 +88,7 @@
        y1="30.819574"
        x2="336.60426"
        y2="49.898358"
-       gradientTransform="matrix(0.61637176,0,0,3.0657302,-74.794082,-13.729695)"
+       gradientTransform="matrix(0.59236514,0,0,2.9463253,-67.596671,-8.9106361)"
        gradientUnits="userSpaceOnUse" />
     <linearGradient
        inkscape:collect="always"
@@ -99,70 +99,70 @@
        x2="133"
        y2="123"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.6799462,0,0,1.6799462,-74.794082,-74.794084)" />
+       gradientTransform="matrix(1.7490923,0,0,1.7490923,-83.745928,-82.400158)" />
   </defs>
   <!-- Disk bar -->
   <rect
-     x="2.483443"
-     y="86.480751"
-     width="215.03311"
-     height="47.038486"
-     rx="23.519243"
+     x="6.6710277"
+     y="87.39679"
+     width="206.65793"
+     height="45.206417"
+     rx="22.603209"
      fill="#141b25"
      stroke="#2a3a52"
      stroke-width="3.35988"
      id="rect3"
-     style="fill:#000000;fill-opacity:1;stroke:#050507;stroke-opacity:1" />
+     style="fill:#000000;fill-opacity:1;stroke:#050507;stroke-width:11.888;stroke-dasharray:none;stroke-opacity:1" />
   <rect
-     x="2.483443"
-     y="86.480751"
-     width="131.0358"
-     height="47.038486"
-     rx="23.519243"
+     x="6.6710277"
+     y="87.39679"
+     width="125.93218"
+     height="45.206417"
+     rx="22.603209"
      fill="#8a6a2a"
      id="rect4"
-     style="fill:#ca9f4e;fill-opacity:1;stroke-width:1.67994" />
+     style="fill:#d5b374;fill-opacity:1;stroke-width:2.38341;stroke-dasharray:none" />
   <rect
-     x="133.51926"
-     y="86.480751"
-     width="83.997307"
-     height="47.038486"
-     rx="23.519243"
+     x="132.60323"
+     y="87.39679"
+     width="80.725754"
+     height="45.206417"
+     rx="22.603209"
      fill="#c9d2de"
      opacity="0.2"
      id="rect5"
-     style="opacity:1;fill:#f9f9f9;fill-opacity:1;stroke-width:1.67994" />
+     style="opacity:1;fill:#f9f9f9;fill-opacity:1;stroke-width:1.61451" />
   <!-- Handle -->
   <rect
-     x="120.91964"
-     y="80.754807"
-     width="11.759622"
-     height="58.490398"
-     rx="5.8798108"
+     x="120.49434"
+     y="81.89386"
+     width="11.301604"
+     height="56.212299"
+     rx="5.6508021"
      fill="url(#g)"
      id="rect6"
-     style="fill:url(#linearGradient11);stroke-width:1.37464" />
+     style="fill:url(#linearGradient11);stroke-width:1.3211" />
   <circle
-     cx="126.79946"
+     cx="126.14515"
      cy="110"
-     r="21.8393"
+     r="22.738199"
      fill="url(#g)"
      opacity="0.95"
      id="circle6"
-     style="opacity:1;fill:url(#linearGradient12);stroke-width:1.67994" />
+     style="opacity:1;fill:url(#linearGradient12);stroke-width:1.74909" />
   <circle
-     cx="126.79946"
+     cx="126.14515"
      cy="110"
-     r="15.119517"
+     r="16.280142"
      fill="#0f131a"
      opacity="0.35"
      id="circle7"
-     style="stroke-width:1.67994" />
+     style="fill:#0000ff;stroke-width:1.8089" />
   <!-- Small dots for "Linux texture" -->
   <g
      opacity="0.55"
      id="g11"
-     transform="matrix(1.6799462,0,0,1.6799462,-74.794081,-74.794083)"
+     transform="matrix(1.6145152,0,0,1.6145152,-67.59667,-67.596672)"
      style="fill:#666666">
     <circle
        cx="142"
