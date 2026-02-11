@@ -2,162 +2,180 @@
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Simulador “Reducir volumen” (Windows 10) | Reducir Disco</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Simulador “Reducir volumen” (Windows 10) — Educativo</title>
 
+  <!-- Favicon SVG -->
   <link rel="icon" type="image/svg+xml" href="./logo.svg" />
+
   <link rel="stylesheet" href="./style.css" />
 </head>
+
 <body>
   <header class="topbar">
     <div class="brand">
-      <img src="./logo.svg" alt="" class="brand__logo" width="36" height="36" />
+      <img src="./logo.svg" alt="Logo" class="brand__logo" />
       <div class="brand__text">
-        <div class="brand__title">Simulador “Reducir volumen” (Windows 10)</div>
-        <div class="brand__subtitle">Educativo • No toca tu disco real • Ideal antes de instalar Linux</div>
+        <h1>Simulador “Reducir volumen” (Windows 10)</h1>
+        <p>Herramienta educativa para entender cómo se divide el disco antes de instalar Linux.</p>
       </div>
     </div>
-    <a class="pill" href="https://github.com/wachin/reducir-disco" target="_blank" rel="noreferrer">
-      Ver repo / Hacer fork
-    </a>
+
+    <div class="badge">
+      <span class="dot"></span>
+      <span>Solo simulación — NO toca discos reales</span>
+    </div>
   </header>
 
-  <main class="wrap">
-    <section class="grid">
-      <article class="card">
-        <h2 class="card__title">1) Ingresa los valores tal como aparecen en Windows</h2>
-        <p class="muted">
-          Abre <strong>Administración de discos</strong> → clic derecho en C: → <strong>Reducir volumen…</strong>.
-          Copia exactamente los números (en MB) y pégalos aquí. <span class="note">Sin puntos ni comas.</span>
-        </p>
+  <main class="container">
+    <section class="card">
+      <h2>1) Ingresa los valores exactamente como aparecen en Windows</h2>
+      <p class="muted">
+        Abre <b>Administración de discos</b> → clic derecho en la partición de Windows (C:) → <b>Reducir volumen…</b>.
+        Copia los números de Windows y pégalos aquí (en <b>MB</b> y <b>sin comas ni puntos</b>, tal como se muestran).
+      </p>
 
-        <form class="form" autocomplete="off" novalidate>
-          <div class="field">
-            <label for="totalBefore">Tamaño total antes de la reducción, en MB</label>
-            <input id="totalBefore" inputmode="numeric" placeholder="" aria-describedby="helpTotal" />
-            <div id="helpTotal" class="help">Ejemplo en Windows: “Tamaño total antes de la reducción (MB)”.</div>
-          </div>
+      <div class="grid">
+        <div class="field">
+          <label for="totalBeforeMb">Tamaño total antes de la reducción, en MB</label>
+          <input id="totalBeforeMb" inputmode="numeric" autocomplete="off" placeholder="(vacío)" />
+          <div class="hint">Ejemplo de dónde sale: “Tamaño total antes de la reducción, en MB”.</div>
+        </div>
 
-          <div class="field">
-            <label for="available">Espacio disponible para la reducción, en MB</label>
-            <input id="available" inputmode="numeric" placeholder="" aria-describedby="helpAvail" />
-            <div id="helpAvail" class="help">
-              Este valor es el <strong>máximo</strong> que Windows permite reducir. Al escribirlo, el simulador lo copia automáticamente abajo.
-            </div>
-          </div>
-
-          <div class="field field--copy">
-            <label for="desired">Tamaño de espacio que desea reducir, en MB <span class="tag">Auto + editable</span></label>
-            <div class="field__row">
-              <input id="desired" inputmode="numeric" placeholder="" aria-describedby="helpDesired" />
-              <button type="button" id="copyBtn" class="btn btn--ghost" disabled>Copiar</button>
-            </div>
-            <div id="helpDesired" class="help">
-              En Windows este campo inicia igual al “espacio disponible”. Aquí también.
-              Luego <strong>solo puedes DISMINUIR</strong> este número (por teclado o arrastrando el divisor).
-            </div>
-          </div>
-
-          <div class="field">
-            <label for="totalAfter">Tamaño total después de la reducción, en MB <span class="tag">Calculado</span></label>
-            <input id="totalAfter" class="readonly" readonly placeholder="" aria-describedby="helpAfter" />
-            <div id="helpAfter" class="help">
-              Se calcula así: <strong>antes − reducir</strong>. Esto es lo que queda para Windows.
-            </div>
-          </div>
-        </form>
-
-        <div class="callouts">
-          <div class="callout" id="statusBox" aria-live="polite">
-            <div class="callout__title">Estado</div>
-            <div class="callout__body" id="statusText">Escribe los dos primeros valores (en MB) para iniciar.</div>
-          </div>
-
-          <div class="callout callout--warn" id="warnBox" hidden>
-            <div class="callout__title">Revisión</div>
-            <div class="callout__body" id="warnText"></div>
+        <div class="field">
+          <label for="shrinkAvailableMb">Espacio disponible para la reducción, en MB</label>
+          <input id="shrinkAvailableMb" inputmode="numeric" autocomplete="off" placeholder="(vacío)" />
+          <div class="hint">
+            Al escribir este valor, se copiará automáticamente en “Tamaño de espacio que desea reducir…”, igual que Windows.
           </div>
         </div>
-      </article>
 
-      <article class="card">
-        <h2 class="card__title">2) Visualización: cómo se divide el disco</h2>
-        <p class="muted">
-          La barra representa el tamaño del volumen <strong>antes</strong>. A la izquierda queda <strong>Windows</strong> (después de reducir),
-          y a la derecha el espacio que quedará <strong>vacío</strong> para que luego lo uses en Linux (partición nueva).
-        </p>
+        <div class="field">
+          <label for="shrinkDesiredMb">
+            Tamaño de espacio que desea reducir, en MB
+            <span class="tag">calculado automáticamente</span>
+          </label>
 
-        <div class="viz">
-          <div class="viz__legend">
-            <div class="legend">
-              <span class="swatch swatch--win"></span>
-              <span>Windows (después)</span>
-              <span class="legend__value" id="winMb">— MB</span>
-            </div>
-
-            <div class="legend">
-              <span class="swatch swatch--lin"></span>
-              <span>Espacio para Linux (vacío)</span>
-              <span class="legend__value" id="linMb">— MB</span>
-            </div>
+          <div class="inline">
+            <input id="shrinkDesiredMb" inputmode="numeric" autocomplete="off" placeholder="(se llenará solo)" />
+            <button class="btn" id="copyShrinkBtn" type="button" aria-label="Copiar tamaño a reducir">
+              Copiar
+            </button>
           </div>
 
-          <div class="barWrap" id="barWrap" aria-label="Barra de partición">
-            <div class="bar" id="bar">
-              <div class="seg seg--win" id="segWin"></div>
-              <div class="seg seg--lin" id="segLin"></div>
-
-              <button class="handle" id="handle" type="button"
-                aria-label="Divisor Windows/Linux"
-                aria-valuemin="0" aria-valuemax="0" aria-valuenow="0" aria-valuetext="Sin datos"
-                disabled>
-                <span class="handle__line"></span>
-                <span class="handle__knob" aria-hidden="true"></span>
-              </button>
-            </div>
-            <div class="barHint muted" id="barHint">Ingresa valores para activar el divisor.</div>
-          </div>
-
-          <div class="explain">
-            <div class="step">
-              <div class="step__num">💡</div>
-              <div class="step__text">
-                Si reduces <strong>menos</strong>, Windows se queda con <strong>más</strong> espacio. Si reduces <strong>más</strong>, queda <strong>más</strong> espacio libre para Linux.
-              </div>
-            </div>
-            <div class="step">
-              <div class="step__num">🧪</div>
-              <div class="step__text">
-                Este simulador <strong>no ejecuta acciones reales</strong>. Solo muestra la matemática y la proporción como material de estudio.
-              </div>
-            </div>
-            <div class="step">
-              <div class="step__num">⚠️</div>
-              <div class="step__text">
-                Windows pone un límite (“espacio disponible”). Por eso aquí el valor a reducir inicia al máximo y luego <strong>solo baja</strong>.
-              </div>
-            </div>
+          <div class="hint">
+            Puedes <b>disminuir</b> este valor (con el campo o con el divisor). No se permite exceder el máximo calculado por Windows.
           </div>
         </div>
-      </article>
+
+        <div class="field">
+          <label for="totalAfterMb">
+            Tamaño total después de la reducción, en MB
+            <span class="tag">calculado automáticamente</span>
+          </label>
+          <input id="totalAfterMb" readonly placeholder="(se calculará)" />
+          <div class="hint">
+            Windows lo calcula como: <b>total antes</b> − <b>tamaño a reducir</b>.
+          </div>
+        </div>
+      </div>
+
+      <div class="msg" id="statusMsg" role="status" aria-live="polite">
+        Ingresa los dos primeros valores para iniciar la simulación.
+      </div>
     </section>
 
-    <footer class="footer">
-      <div class="footer__cta">
-        <div class="footer__title">¿Te sirvió? Haz fork y mejora el simulador</div>
-        <div class="footer__subtitle">
-          Repo: <a href="https://github.com/wachin/reducir-disco" target="_blank" rel="noreferrer">github.com/wachin/reducir-disco</a>
+    <section class="card">
+      <h2>2) Visualización del disco (Windows | Linux)</h2>
+      <p class="muted">
+        La parte izquierda representa <b>Windows después de la reducción</b>.
+        La parte derecha representa <b>espacio vacío</b> (lo que típicamente usarás para Linux).
+        El divisor es <b>arrastrable</b> y mantiene proporción real.
+      </p>
+
+      <div class="diskWrap">
+        <div class="labelsRow">
+          <div class="labelBox">
+            <div class="labelTitle">Windows (después)</div>
+            <div class="labelValue" id="labelWindowsAfter">—</div>
+          </div>
+          <div class="labelBox">
+            <div class="labelTitle">Linux (espacio vacío)</div>
+            <div class="labelValue" id="labelLinuxSpace">—</div>
+          </div>
+        </div>
+
+        <!-- Barra obligatoria -->
+        <div class="diskBar" id="diskBar" aria-label="Barra de disco con divisor">
+          <div class="seg seg--win" id="segWin"></div>
+          <div class="seg seg--linux" id="segLinux"></div>
+
+          <!-- Handle obligatorio -->
+          <div class="dividerHandle" id="dividerHandle" role="slider"
+               aria-valuemin="0" aria-valuemax="0" aria-valuenow="0"
+               aria-label="Divisor de partición" tabindex="0">
+            <div class="handleGrip" aria-hidden="true"></div>
+          </div>
+        </div>
+
+        <div class="mini">
+          <div class="mini__row">
+            <span class="mini__k">Tip:</span>
+            <span class="mini__v">Arrastra el divisor o escribe el valor de “Tamaño a reducir”.</span>
+          </div>
+          <div class="mini__row">
+            <span class="mini__k">Regla clave:</span>
+            <span class="mini__v">Nunca podrás superar el “Espacio disponible para la reducción”.</span>
+          </div>
         </div>
       </div>
+    </section>
 
-      <div class="footer__meta">
-        <div><strong>Copyright:</strong> Washington Indacochea Delgado</div>
-        <div><strong>Correo:</strong> <a href="mailto:linuxfrontier@proton.me">linuxfrontier@proton.me</a></div>
-        <div><strong>Licencia:</strong> GPL 3</div>
-        <div><strong>Año:</strong> 2026</div>
+    <section class="card">
+      <h2>3) Explicación rápida (modo estudiante)</h2>
+      <div class="edu">
+        <div class="edu__item">
+          <div class="edu__icon">🧠</div>
+          <div>
+            <b>¿Por qué Windows limita el máximo?</b><br />
+            Porque algunos archivos del sistema no se pueden mover fácilmente (p. ej. archivo de paginación, hibernación, puntos de restauración).
+            Por eso Windows calcula un máximo “seguro”.
+          </div>
+        </div>
+
+        <div class="edu__item">
+          <div class="edu__icon">📏</div>
+          <div>
+            <b>¿Qué significa “Tamaño total después”?</b><br />
+            Es el tamaño que quedará para Windows luego de “recortar” la partición. Lo restante se vuelve espacio libre.
+          </div>
+        </div>
+
+        <div class="edu__item">
+          <div class="edu__icon">⚠️</div>
+          <div>
+            <b>Importante:</b> Esta página NO hace cambios reales en tu disco. Solo te ayuda a entender los números y la proporción.
+          </div>
+        </div>
       </div>
-    </footer>
+    </section>
   </main>
+
+  <footer class="footer">
+    <div class="footer__cta">
+      <div class="footer__title">¿Te sirvió? Haz fork y mejora el simulador 👇</div>
+      <a class="footer__link" href="https://github.com/wachin/reducir-disco" target="_blank" rel="noopener">
+        https://github.com/wachin/reducir-disco
+      </a>
+    </div>
+
+    <div class="footer__meta">
+      <div>Copyright: Washington Indacochea Delgado</div>
+      <div>Correo: linuxfrontier@proton.me</div>
+      <div>Licencia: GPL 3</div>
+      <div>Año: 2026</div>
+    </div>
+  </footer>
 
   <script src="./app.js"></script>
 </body>
