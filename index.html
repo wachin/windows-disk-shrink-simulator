@@ -5,16 +5,41 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Simulador “Reducir volumen” (Windows 10) — Educativo</title>
 
-  <!-- Favicon SVG -->
   <link rel="icon" type="image/svg+xml" href="./logo.svg" />
-
   <link rel="stylesheet" href="./style.css" />
+
+  <!-- CSS crítico (fallback por si style.css no carga) -->
+  <style>
+    body{margin:0;background:#0b0f16;color:#e8eefc;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
+    .brand__logo{width:44px;height:44px;display:block}
+    .js-warning{max-width:1100px;margin:10px auto 0;padding:0 18px}
+    .js-warning__box{
+      border:1px dashed rgba(255,255,255,.18);
+      background:rgba(255,107,107,.06);
+      border-radius:14px;
+      padding:10px 12px;
+      color:rgba(232,238,252,.95);
+      font-size:13px;
+      line-height:1.35rem;
+      display:none;
+    }
+  </style>
 </head>
 
 <body>
+  <!-- Mensaje si app.js no está cargando -->
+  <div class="js-warning">
+    <div class="js-warning__box" id="jsNotRunning">
+      ⚠️ Parece que <b>app.js</b> o <b>style.css</b> no se están cargando en GitHub Pages (rutas o nombres).
+      Revisa que los archivos estén en la <b>raíz</b> del repo y se llamen exactamente:
+      <b>index.html</b>, <b>style.css</b>, <b>app.js</b>, <b>logo.svg</b>.
+    </div>
+  </div>
+
   <header class="topbar">
     <div class="brand">
-      <img src="./logo.svg" alt="Logo" class="brand__logo" />
+      <!-- Fallback tamaño fijo para que NO se haga gigante si falla CSS -->
+      <img src="./logo.svg" alt="Logo" class="brand__logo" width="44" height="44" />
       <div class="brand__text">
         <h1>Simulador “Reducir volumen” (Windows 10)</h1>
         <p>Herramienta educativa para entender cómo se divide el disco antes de instalar Linux.</p>
@@ -32,7 +57,7 @@
       <h2>1) Ingresa los valores exactamente como aparecen en Windows</h2>
       <p class="muted">
         Abre <b>Administración de discos</b> → clic derecho en la partición de Windows (C:) → <b>Reducir volumen…</b>.
-        Copia los números de Windows y pégalos aquí (en <b>MB</b> y <b>sin comas ni puntos</b>, tal como se muestran).
+        Copia los números de Windows y pégalos aquí (en <b>MB</b> y <b>sin comas ni puntos</b>).
       </p>
 
       <div class="grid">
@@ -88,8 +113,7 @@
     <section class="card">
       <h2>2) Visualización del disco (Windows | Linux)</h2>
       <p class="muted">
-        La parte izquierda representa <b>Windows después de la reducción</b>.
-        La parte derecha representa <b>espacio vacío</b> (lo que típicamente usarás para Linux).
+        Izquierda: <b>Windows después</b>. Derecha: <b>espacio vacío para Linux</b>.
         El divisor es <b>arrastrable</b> y mantiene proporción real.
       </p>
 
@@ -105,12 +129,10 @@
           </div>
         </div>
 
-        <!-- Barra obligatoria -->
         <div class="diskBar" id="diskBar" aria-label="Barra de disco con divisor">
           <div class="seg seg--win" id="segWin"></div>
           <div class="seg seg--linux" id="segLinux"></div>
 
-          <!-- Handle obligatorio -->
           <div class="dividerHandle" id="dividerHandle" role="slider"
                aria-valuemin="0" aria-valuemax="0" aria-valuenow="0"
                aria-label="Divisor de partición" tabindex="0">
@@ -138,8 +160,7 @@
           <div class="edu__icon">🧠</div>
           <div>
             <b>¿Por qué Windows limita el máximo?</b><br />
-            Porque algunos archivos del sistema no se pueden mover fácilmente (p. ej. archivo de paginación, hibernación, puntos de restauración).
-            Por eso Windows calcula un máximo “seguro”.
+            Hay archivos “difíciles de mover” (paginación, hibernación, restauración). Windows calcula un máximo “seguro”.
           </div>
         </div>
 
@@ -147,14 +168,14 @@
           <div class="edu__icon">📏</div>
           <div>
             <b>¿Qué significa “Tamaño total después”?</b><br />
-            Es el tamaño que quedará para Windows luego de “recortar” la partición. Lo restante se vuelve espacio libre.
+            Es lo que quedará para Windows. Lo recortado queda como espacio libre para Linux.
           </div>
         </div>
 
         <div class="edu__item">
           <div class="edu__icon">⚠️</div>
           <div>
-            <b>Importante:</b> Esta página NO hace cambios reales en tu disco. Solo te ayuda a entender los números y la proporción.
+            <b>Importante:</b> Esta página NO hace cambios reales en tu disco. Solo simula números y proporción.
           </div>
         </div>
       </div>
