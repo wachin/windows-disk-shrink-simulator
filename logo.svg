@@ -23,7 +23,7 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:zoom="2.2863636"
      inkscape:cx="110"
-     inkscape:cy="110"
+     inkscape:cy="109.56263"
      inkscape:window-width="1366"
      inkscape:window-height="705"
      inkscape:window-x="-8"
@@ -33,6 +33,22 @@
   <defs
      id="defs2">
     <linearGradient
+       id="linearGradient4"
+       x1="0"
+       y1="0"
+       x2="1"
+       y2="1">
+      <stop
+         offset="0"
+         stop-color="#4aa3ff"
+         id="stop3"
+         style="stop-color:#9fceff;stop-opacity:1;" />
+      <stop
+         offset="1"
+         stop-color="#1d6fff"
+         id="stop4" />
+    </linearGradient>
+    <linearGradient
        id="g"
        x1="0"
        y1="0"
@@ -41,7 +57,8 @@
       <stop
          offset="0"
          stop-color="#4aa3ff"
-         id="stop1" />
+         id="stop1"
+         style="stop-color:#fdfeff;stop-opacity:1;" />
       <stop
          offset="1"
          stop-color="#1d6fff"
@@ -65,13 +82,13 @@
     </filter>
     <linearGradient
        inkscape:collect="always"
-       xlink:href="#g"
+       xlink:href="#linearGradient4"
        id="linearGradient11"
        x1="317.52548"
        y1="30.819574"
        x2="336.60426"
        y2="49.898358"
-       gradientTransform="matrix(0.54354168,0,0,4.0377382,-52.958937,-52.958938)"
+       gradientTransform="matrix(0.61637176,0,0,3.0657302,-74.794082,-13.729695)"
        gradientUnits="userSpaceOnUse" />
     <linearGradient
        inkscape:collect="always"
@@ -82,115 +99,99 @@
        x2="133"
        y2="123"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.4814449,0,0,1.4814449,-52.958937,-52.958938)" />
+       gradientTransform="matrix(1.6799462,0,0,1.6799462,-74.794082,-74.794084)" />
   </defs>
-  <rect
-     x="18"
-     y="18"
-     width="184"
-     height="184"
-     rx="34"
-     fill="#0f131a"
-     stroke="#223044"
-     stroke-width="3"
-     filter="url(#s)"
-     id="rect2"
-     style="fill:#341515;fill-opacity:1"
-     transform="matrix(1.145002,0,0,1.145002,-15.95022,-15.95022)" />
   <!-- Disk bar -->
   <rect
-     x="15.187527"
-     y="89.259766"
-     width="189.62494"
-     height="41.480453"
-     rx="20.740227"
+     x="2.483443"
+     y="86.480751"
+     width="215.03311"
+     height="47.038486"
+     rx="23.519243"
      fill="#141b25"
      stroke="#2a3a52"
-     stroke-width="2.96288"
-     id="rect3" />
+     stroke-width="3.35988"
+     id="rect3"
+     style="fill:#000000;fill-opacity:1;stroke:#050507;stroke-opacity:1" />
   <rect
-     x="15.187527"
-     y="89.259766"
-     width="115.5527"
-     height="41.480453"
-     rx="20.740227"
+     x="2.483443"
+     y="86.480751"
+     width="131.0358"
+     height="47.038486"
+     rx="23.519243"
      fill="#8a6a2a"
      id="rect4"
-     style="stroke-width:1.48144" />
+     style="fill:#ca9f4e;fill-opacity:1;stroke-width:1.67994" />
   <rect
-     x="130.74023"
-     y="89.259766"
-     width="74.072243"
-     height="41.480453"
-     rx="20.740227"
+     x="133.51926"
+     y="86.480751"
+     width="83.997307"
+     height="47.038486"
+     rx="23.519243"
      fill="#c9d2de"
      opacity="0.2"
      id="rect5"
-     style="stroke-width:1.48144" />
+     style="opacity:1;fill:#f9f9f9;fill-opacity:1;stroke-width:1.67994" />
   <!-- Handle -->
   <rect
-     x="119.62939"
-     y="71.482437"
-     width="10.370113"
-     height="77.035133"
-     rx="5.1850567"
+     x="120.91964"
+     y="80.754807"
+     width="11.759622"
+     height="58.490398"
+     rx="5.8798108"
      fill="url(#g)"
      id="rect6"
-     style="fill:url(#linearGradient11);stroke-width:1.48144" />
+     style="fill:url(#linearGradient11);stroke-width:1.37464" />
   <circle
-     cx="124.81445"
+     cx="126.79946"
      cy="110"
-     r="19.258783"
+     r="21.8393"
      fill="url(#g)"
      opacity="0.95"
      id="circle6"
-     style="fill:url(#linearGradient12);stroke-width:1.48144" />
+     style="opacity:1;fill:url(#linearGradient12);stroke-width:1.67994" />
   <circle
-     cx="124.81445"
+     cx="126.79946"
      cy="110"
-     r="13.333005"
+     r="15.119517"
      fill="#0f131a"
      opacity="0.35"
      id="circle7"
-     style="stroke-width:1.48144" />
+     style="stroke-width:1.67994" />
   <!-- Small dots for "Linux texture" -->
   <g
      opacity="0.55"
      id="g11"
-     transform="matrix(1.4814449,0,0,1.4814449,-52.958937,-52.958938)">
+     transform="matrix(1.6799462,0,0,1.6799462,-74.794081,-74.794083)"
+     style="fill:#666666">
     <circle
        cx="142"
        cy="104"
        r="1.7"
        fill="#c9d2de"
-       id="circle8" />
+       id="circle8"
+       style="fill:#666666" />
     <circle
        cx="152"
        cy="114"
        r="1.7"
        fill="#c9d2de"
-       id="circle9" />
+       id="circle9"
+       style="fill:#666666" />
     <circle
        cx="162"
        cy="104"
        r="1.7"
        fill="#c9d2de"
-       id="circle10" />
+       id="circle10"
+       style="fill:#666666" />
     <circle
        cx="168"
        cy="114"
        r="1.7"
        fill="#c9d2de"
-       id="circle11" />
+       id="circle11"
+       style="fill:#666666" />
   </g>
   <!-- Text -->
-  <text
-     x="110"
-     y="169.5401"
-     text-anchor="middle"
-     font-family="system-ui, '-apple-system', 'Segoe UI', Roboto, Arial"
-     font-size="18.32px"
-     fill="#d7e3f2"
-     id="text11"
-     style="stroke-width:1.145">Reducir Disco</text>
 </svg>
