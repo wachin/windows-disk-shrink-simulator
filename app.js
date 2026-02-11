@@ -33,7 +33,17 @@ function toIntOrNull(value){
   return Math.floor(n);
 }
 function clamp(n, min, max){ return Math.min(max, Math.max(min, n)); }
-function fmtMb(n){ return (n === null || n === undefined) ? "—" : `${String(n)} MB`; }
+function fmtMbGb(mb){
+  if (mb === null || mb === undefined) return "—";
+
+  // Windows está en MB; para GB usamos 1024 MB = 1 GB (estilo binario)
+  const gb = mb / 1024;
+
+  // Mostrar GB con 2 decimales (sin comas; usamos punto)
+  const gbText = gb.toFixed(2);
+
+  return `${String(mb)} MB (${gbText} GB)`;
+}
 
 function setMsg(type, text){
   if (!elMsg) return;
@@ -56,8 +66,8 @@ function resetVisualization(){
 }
 
 function renderLabels(winAfterMb, linuxSpaceMb){
-  if (elLabelWinAfter) elLabelWinAfter.textContent = fmtMb(winAfterMb);
-  if (elLabelLinux) elLabelLinux.textContent = fmtMb(linuxSpaceMb);
+  if (elLabelWinAfter) elLabelWinAfter.textContent = fmtMbGb(winAfterMb);
+  if (elLabelLinux) elLabelLinux.textContent = fmtMbGb(linuxSpaceMb);
 }
 
 function renderBar(winAfterMb, linuxSpaceMb, totalBeforeMb){
