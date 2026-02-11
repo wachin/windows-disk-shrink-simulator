@@ -185,7 +185,7 @@
       if (desired === maxShrink) {
         setStatus("🟦 Valor al máximo permitido. Puedes reducirlo (hacia la derecha) o aumentarlo hasta este máximo (hacia la izquierda) como en Windows.");
       } else if (desired === 0) {
-        setStatus("ℹ️ En 0 MB no estás reduciendo nada: no quedará espacio libre para Linux.");
+        setStatus("ℹ️ En 0 MB no estás reduciendo nada: no quedará espacio libre para Linux");
       } else {
         setStatus("✅ Ajusta el valor dentro del rango permitido. A la derecha verás cuánto espacio quedará libre para Linux.");
       }
