@@ -153,14 +153,6 @@ body{
 
 .inline{display:flex; gap:10px; align-items:center; position:relative}
 
-/* FIX: en filas flex con botón, el input puede encogerse demasiado */
-.inline input{
-  flex: 1;
-  min-width: 0;
-  text-align: right;              /* opcional: números alineados */
-  font-variant-numeric: tabular-nums; /* opcional: números monoespaciados */
-}
-
 .btn{
   cursor:pointer;
   user-select:none;
