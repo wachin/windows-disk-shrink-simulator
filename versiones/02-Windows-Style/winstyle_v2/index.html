@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>Simulador “Reducir volumen” (Windows) — Educativo</title>
+<link href="./logo.svg" rel="icon" type="image/svg+xml"/>
+<link href="./style.css" rel="stylesheet"/>
+<!-- CSS crítico (fallback por si style.css no carga) -->
+<style>
+body{margin:0;background:#f2f2f2;color:#111;font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial}
+    .brand__logo{width:44px;height:44px;display:block}
+    .js-warning{max-width:1100px;margin:10px auto 0;padding:0 18px}
+    .js-warning__box{border:1px dashed #cfcfcf;background:#fff;border-radius:14px;padding:10px 12px;color:#111;font-size:13px;line-height:1.35rem;display:none;}
+  </style>
+</head>
+<body>
+<!-- Mensaje si app.js no está cargando -->
+<div class="js-warning">
+<div class="js-warning__box" id="jsNotRunning">
+      ⚠️ Parece que <b>app.js</b> o <b>style.css</b> no se están cargando en GitHub Pages (rutas o nombres).
+      Revisa que los archivos estén en la <b>raíz</b> del repo y se llamen exactamente:
+      <b>index.html</b>, <b>style.css</b>, <b>app.js</b>, <b>logo.svg</b>.
+    </div>
+</div>
+<header class="topbar">
+<div class="brand">
+<!-- Fallback tamaño fijo para que NO se haga gigante si falla CSS -->
+<img alt="Logo" class="brand__logo" height="44" src="./logo.svg" width="44"/>
+<div class="brand__text">
+<h1>Simulador “Reducir volumen” (Windows)</h1>
+<p>Herramienta educativa para entender cómo se divide el disco antes de instalar Linux.</p>
+</div>
+</div>
+<div class="badge">
+<span class="dot"></span>
+<span>Solo simulación — NO toca discos reales</span>
+</div>
+</header>
+<main class="container"><section class="card card--sim"><h2>Simulador</h2><div class="simLayout"><div class="simLeft"><div aria-label="Reducir C" class="winDialog" role="dialog"><div class="winTitlebar"><div class="winTitle">Reducir C:</div></div><div class="winContent"><div class="winRow"><label class="winLabel" for="totalBeforeMb">Tamaño total antes de la reducción, en MB:</label><input autocomplete="off" class="winInput" id="totalBeforeMb" inputmode="numeric" placeholder="(vacío)" type="text"/></div><div class="winRow"><label class="winLabel" for="shrinkAvailableMb">Espacio disponible para la reducción, en MB:</label><input autocomplete="off" class="winInput" id="shrinkAvailableMb" inputmode="numeric" placeholder="(vacío)" type="text"/></div><div class="winRow"><label class="winLabel" for="shrinkDesiredMb">Tamaño del espacio que desea reducir, en MB:</label><input autocomplete="off" class="winInput" id="shrinkDesiredMb" inputmode="numeric" placeholder="(se llenará solo)" step="1" type="number"/></div><div class="winRow"><label class="winLabel" for="totalAfterMb">Tamaño total después de la reducción, en MB:</label><input class="winInput" id="totalAfterMb" placeholder="(se calculará)" readonly="" type="text"/></div><div class="winInfo"><div aria-hidden="true" class="winInfoIcon">i</div><div class="winInfoText">No se puede reducir un volumen más allá del punto en el que haya algún archivo que no se pueda mover. Vea el evento "defrag" del registro de la aplicación para obtener información detallada acerca de la operación cuando se haya completado.</div></div><div class="winHelp">Vea "Reducir un volumen básico" en la Ayuda de Administración de discos para obtener más información.</div></div><div class="winButtons"><button class="winBtn winBtn--primary" id="btnReduceFake" type="button">Reducir</button><button class="winBtn" id="btnCancelFake" type="button">Cancelar</button></div></div></div><div class="simRight"><div aria-label="Administrador de discos (simulación)" class="dmWindow"><div class="dmTitlebar">Administrador de discos (simulación)</div><div class="dmBody"><div class="diskWrap dmDiskWrap">
+<div class="labelsRow">
+<div class="labelBox">
+<div class="labelTitle">Windows (después)</div>
+<div class="labelValue" id="labelWindowsAfter">—</div>
+</div>
+<div class="labelBox">
+<div class="labelTitle">Linux (espacio vacío)</div>
+<div class="labelValue" id="labelLinuxSpace">—</div>
+</div>
+</div>
+<div aria-label="Barra de disco con divisor" class="diskBar" id="diskBar">
+<div class="seg seg--win" id="segWin"></div>
+<div class="seg seg--linux" id="segLinux"></div>
+<div aria-label="Divisor de partición" aria-valuemax="0" aria-valuemin="0" aria-valuenow="0" class="dividerHandle" id="dividerHandle" role="slider" tabindex="0">
+<div aria-hidden="true" class="handleGrip"></div>
+</div>
+</div>
+<div class="mini">
+<div class="mini__row">
+<span class="mini__k">Tip:</span>
+<span class="mini__v">Arrastra el divisor o escribe el valor de “Tamaño a reducir”.</span>
+</div>
+<div class="mini__row">
+<span class="mini__k">Regla clave:</span>
+<span class="mini__v">Nunca podrás superar el “Espacio disponible para la reducción”.</span>
+</div>
+</div>
+</div></div></div></div></div></section><section class="card"><h2>Indicaciones</h2><p class="muted">Abre Administración de discos → clic derecho en la partición de Windows (C:) → Reducir volumen… Copia los dos primeros números exactamente como aparecen (en MB y sin comas ni puntos). Luego ajusta cuánto deseas reducir y mira el resultado a la derecha.</p></section><section class="card">
+<h2>3) Explicación rápida</h2>
+<div class="edu">
+<div class="edu__item">
+<div class="edu__icon">⛔</div>
+<div>
+<b>¿Por qué Windows limita el máximo?</b><br/>
+            Hay archivos “difíciles de mover” (paginación, hibernación, restauración). Windows calcula un máximo “seguro”. Si alguno de estos está ubicado cerca del “final” de la partición, Windows no permite reducir más allá de ese punto, pero si usted necesita más espacio puede hacerlo con una herramienta externa como
+			<a class="edu-link" href="https://www.diskpart.com/es/articles/reducir-volumen-con-archivos-inamovibles-7400-tc.html" rel="noopener" target="_blank">
+		    AOMEI Partition Assistant
+		    </a>.
+          </div>
+</div>
+<div class="edu__item">
+<div class="edu__icon">📏</div>
+<div>
+<b>¿Qué significa “Tamaño total después”?</b><br/>
+            Es lo que quedará para Windows. Lo recortado queda como espacio libre para Linux u otro Sistema Operativo, o alguna partición que desees crear para tener allí algo.
+          </div>
+</div>
+<div class="edu__item">
+<div class="edu__icon">⚠️</div>
+<div>
+<b>Importante:</b> Esta página NO hace cambios reales en tu disco. Solo simula números y proporción. La hice porque lo más rapido es usar la herramienta de Windows mismo para "Reducir" espacio en Disco, y los de Microsoft aunque tienen la capacidad de hacerlo nunca hicieron una herramienta visual para mostrar el espacio a dejar para otro Sistema Operativo.
+          </div>
+</div>
+</div>
+</section></main>
+<footer class="footer">
+<div class="footer__cta">
+<div class="footer__title">¿Te sirvió? Haz fork, traduce, mejora el simulador 👇</div>
+<a class="footer__link" href="https://github.com/wachin/reducir-disco" rel="noopener" target="_blank">
+        https://github.com/wachin/reducir-disco
+      </a>
+</div>
+<div class="footer__meta">
+<div>Copyright: Washington Indacochea Delgado</div>
+<div>Correo: linuxfrontier@proton.me</div>
+<div>Licencia: GPL 3</div>
+<div>Año: 2026</div>
+</div>
+</footer>
+<script src="./app.js"></script>
+</body>
+</html>
