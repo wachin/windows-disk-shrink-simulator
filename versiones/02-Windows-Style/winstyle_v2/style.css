@@ -119,9 +119,22 @@ main{
 
 .winRow{
   display:grid;
-  grid-template-columns: 1fr 140px;
+  grid-template-columns: 1fr 230px;
   gap:10px;
   align-items:center;
+}
+
+/* Campo con botón (Copiar) dentro de la misma celda derecha */
+.winField{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+/* FIX: en filas flex con botón, el input puede encogerse demasiado */
+.winField .winInput{
+  flex: 1;
+  min-width: 0;
 }
 
 .winLabel{
@@ -201,6 +214,27 @@ main{
   background:#e7f0ff;
 }
 .winBtn--primary:hover{background:#f4f8ff}
+
+.winBtn--copy{
+  height:26px;
+  padding:0 12px;
+  font-size:12.5px;
+  white-space:nowrap;
+}
+
+/* ===== Status message (feedback) ===== */
+.msg{
+  margin-top:10px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:10px 12px;
+  font-size:12.5px;
+  color:#111;
+  background:#fafafa;
+}
+.msg:empty{display:none}
+.msg--ok{border-color: rgba(42,167,69,.45); background: rgba(42,167,69,.08)}
+.msg--bad{border-color: rgba(214,34,34,.45); background: rgba(214,34,34,.08)}
 
 /* ===== Disk Management pane mock ===== */
 .dmWindow{
@@ -307,13 +341,3 @@ main{
 }
 
 .edu-link{color:#0b63ce; text-decoration:underline}
-
-/* FIX: en filas flex, el input no debe encogerse demasiado */
-.inline input,
-.inline-row input,
-.row.inline input{
-  flex: 1;
-  min-width: 0;
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}

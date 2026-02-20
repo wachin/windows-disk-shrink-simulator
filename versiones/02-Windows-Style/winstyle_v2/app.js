@@ -53,6 +53,33 @@ function setMsg(type, text){
   elMsg.textContent = text;
 }
 
+function fallbackCopyText(text){
+  try{
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.left = "-9999px";
+    document.body.appendChild(ta);
+    ta.select();
+    ta.setSelectionRange(0, ta.value.length);
+    const ok = document.execCommand("copy");
+    document.body.removeChild(ta);
+    return ok;
+  }catch{
+    return false;
+  }
+}
+
+async function copyToClipboard(text){
+  // Clipboard API funciona mejor en HTTPS o localhost.
+  if (navigator.clipboard && window.isSecureContext){
+    await navigator.clipboard.writeText(text);
+    return true;
+  }
+  return fallbackCopyText(text);
+}
+
 function resetVisualization(){
   if (!elSegWin || !elSegLinux || !elDivider) return;
   elSegWin.style.width = "50%";
@@ -176,8 +203,21 @@ btnCopy?.addEventListener("click", async () => {
   if (!val) return setMsg("bad", "No hay un número para copiar todavía.");
 
   try{
-    await navigator.clipboard.writeText(val);
-    setMsg("ok", `Copiado: ${val} (MB).`);
+    const ok = await copyToClipboard(val);
+    if (!ok){
+      setMsg("bad", "No se pudo copiar automáticamente. Copia el número manualmente.");
+      return;
+    }
+
+    // Feedback breve en el botón + mensaje
+    const old = btnCopy.textContent;
+    btnCopy.textContent = "¡Copiado!";
+    btnCopy.disabled = true;
+    setMsg("ok", `Copiado: ${val} (MB). Ahora puedes pegarlo en Windows.`);
+    window.setTimeout(() => {
+      btnCopy.textContent = old;
+      btnCopy.disabled = false;
+    }, 1100);
   }catch{
     setMsg("bad", "No se pudo copiar automáticamente. Copia el número manualmente.");
   }
