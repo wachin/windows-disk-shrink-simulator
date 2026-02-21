@@ -196,15 +196,4 @@ Para cambios grandes:
 
 Esto mantiene el proyecto organizado.
 
----
-
-
----
-
-Si quieres, puedo ahora:
-
-- 🔹 Mejorar el README principal para que enlace a esta guía
-- 🔹 Crear una versión más profesional estilo "Contributing.md"
-- 🔹 Hacer un flujo con Pull Requests (estilo proyecto open source real)
-- 🔹 Enseñarte cómo activar GitHub Actions para probar automáticamente el HTML
 
