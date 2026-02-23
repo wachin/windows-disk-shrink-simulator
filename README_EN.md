@@ -188,7 +188,7 @@ That is what this simulator helps you understand visually.
 
 ## ⚠️ Explanation of the Official Microsoft Warning
 
-The [Microsoft documentation](https://learn.microsoft.com/es-es/windows-server/storage/disk-management/shrink-a-basic-volume) includes the following warning:
+The [Microsoft documentation](https://learn.microsoft.com/en-us/windows-server/storage/disk-management/shrink-a-basic-volume) includes the following warning:
 
 > "If the partition is a raw partition that contains data, such as a database file, shrinking the partition might destroy the data."
 
