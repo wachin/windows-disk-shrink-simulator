@@ -118,7 +118,7 @@ Ese límite es exactamente el valor que Windows muestra como:
 
 Ese número es el máximo que Windows permite reducir en ese momento.
 
-**Excepto que.-** uses un software de partición de terceros que puede fácilmente reducir (pero se toma su tiempo) un volumen o reducir la partición de archivos inamovibles (los mueve automáticamente) a través de la función Redimensionar partición, como lo hace [AOMEI Partition Assistant](https://www.diskpart.com/es/articles/reducir-volumen-con-archivos-inamovibles-7400-tc.html)  
+**Excepto que.-** uses un software de partición de terceros que puede reducir un volumen o partición de archivos inamovibles (los mueve automáticamente) a través de la función Redimensionar partición, como lo hace [AOMEI Partition Assistant](https://www.diskpart.com/es/articles/reducir-volumen-con-archivos-inamovibles-7400-tc.html). Pero sin embago, esto para personas sin experiencia podría ser peligroso, y no quiero llevarlos a hacer cosas sin entender los riezgos, ese es un programa que lo pongo aquí porque yo lo he usado, solo que para usarlo hay que entender bien lo que se hace, hay que tener una capacitación, y es imprescindible sacar un respaldo. En Youtube hay videos donde explican cómo usarlo. Lo que no me gusta es que se demora mucho en todo el proceso de reducción y más rápido es usar el programa de Windows mismo.
 
 ---
 
