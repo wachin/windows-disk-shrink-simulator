@@ -21,7 +21,7 @@ const elSegLinux = document.getElementById("segLinux");
 const elMsg = document.getElementById("statusMsg");
 const btnCopy = document.getElementById("copyShrinkBtn");
 
-const state = { totalBefore: null, shrinkAvailable: null, shrinkDesired: null, dragging: false };
+const state = { totalBefore: null, shrinkAvailable: null, shrinkDesired: null, dragging: false, userEditedDesired: false };
 
 function digitsOnly(str){ return String(str || "").replace(/[^\d]/g, ""); }
 function toIntOrNull(value){
@@ -111,6 +111,9 @@ function renderBar(winAfterMb, linuxSpaceMb, totalBeforeMb){
 }
 
 function recompute(){
+  const prevAvail = state.shrinkAvailable;
+  const prevDesired = state.shrinkDesired;
+
   state.totalBefore = toIntOrNull(elTotalBefore?.value);
   state.shrinkAvailable = toIntOrNull(elShrinkAvail?.value);
   const desiredNow = toIntOrNull(elShrinkDesired?.value);
@@ -135,10 +138,17 @@ function recompute(){
 
   let desired = desiredNow;
 
-  // Windows-like: al iniciar, desired = available (si está vacío)
-  if (desired === null){
+  // Windows-like: al iniciar, desired = available.
+  // Además: si el usuario cambia los 2 primeros valores (otro PC),
+  // y el "deseado" todavía era el valor por defecto anterior,
+  // entonces lo actualizamos automáticamente al nuevo "available".
+  const availChanged = (prevAvail !== null && prevAvail !== state.shrinkAvailable);
+  const desiredWasDefault = (prevDesired !== null && prevAvail !== null && prevDesired === prevAvail);
+
+  if (desired === null || (!state.userEditedDesired && availChanged) || (availChanged && desiredWasDefault)){
     desired = state.shrinkAvailable;
     if (elShrinkDesired) elShrinkDesired.value = String(desired);
+    state.userEditedDesired = false; // sigue siendo automático
   }
 
   // No permitir exceder available
@@ -183,6 +193,7 @@ elShrinkAvail?.addEventListener("input", () => {
   // Copia automática estilo Windows si está vacío o fuera de rango
   if (avail !== null && (desired === null || desired > avail)){
     if (elShrinkDesired) elShrinkDesired.value = String(avail);
+    state.userEditedDesired = false;
   }
 
   recompute();
@@ -190,6 +201,7 @@ elShrinkAvail?.addEventListener("input", () => {
 
 elShrinkDesired?.addEventListener("input", () => {
   normalizeInputToDigits(elShrinkDesired);
+  state.userEditedDesired = true;
   const avail = toIntOrNull(elShrinkAvail?.value);
   const desired = toIntOrNull(elShrinkDesired.value);
   if (avail !== null && desired !== null && desired > avail){
