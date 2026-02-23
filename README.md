@@ -75,7 +75,7 @@ Debes:
 2. Mantener presionado el clic.
 3. Arrastrarlo hacia la derecha.
 
-❗ No podrás moverlo hacia la izquierda más allá del límite.
+❗ No podrás moverlo hacia la izquierda más allá del límite (No se puede reducir el espacio asignado más allá del punto en el que se encuentran los archivos no movibles.)
 
 ---
 
@@ -107,7 +107,7 @@ Ese número es el máximo que Windows permite reducir en ese momento.
 
 El campo:
 
-> “Tamaño del espacio que desea reducir”
+> “Tamaño del espacio que desea reducir, en MB”
 
 incluye un botón **Copiar**.
 
@@ -115,7 +115,6 @@ Este botón:
 
 * Copia el valor automáticamente al portapapeles.
 * Permite pegarlo directamente en la ventana real de Windows.
-* Funciona en HTTPS (GitHub Pages) y tiene método alternativo de compatibilidad.
 
 ---
 
@@ -156,15 +155,81 @@ Eso es lo que este simulador ayuda a entender visualmente.
 
 ---
 
-## ⚠️ Advertencia
+## ⚠️ Explicación de la advertencia oficial de Microsoft
 
-Este simulador es solo educativo.
+La [documentación de Microsoft](https://learn.microsoft.com/es-es/windows-server/storage/disk-management/shrink-a-basic-volume) incluye la siguiente advertencia:
 
-Antes de modificar tus particiones reales:
+> "Si la partición es una partición sin formato que contiene datos, como un archivo de base de datos, reducirla podría destruir los datos".
 
-* Haz respaldo de tus datos.
-* No fuerces reducciones fuera del límite permitido.
-* No uses herramientas no confiables.
+**¿Qué significa esto?**  
+
+Esta advertencia se refiere específicamente a las **particiones sin formato reconocible por Windows**, es decir, no se refiere al "Disco C:" que un usuario normal usa, sino a otra partición que no está formateada como NTFS
+
+Ejemplo típico en servidores:  
+
+- El administrador crea un disco adicional.  
+- Ese disco NO se formatea con NTFS.  
+- Se entrega directamente al motor de base de datos.  
+- SQL Server escribe datos directamente a nivel de bloque.  
+
+En ese caso:
+
+- Windows no ve archivos.  
+- No hay MFT.  
+- No hay estructura NTFS.  
+- El volumen aparece como RAW.  
+
+Pero SQL Server sí sabe qué bloques contienen datos.
+
+Una partición sin formato es una partición que:
+
+- No utiliza un sistema de archivos reconocido (NTFS, FAT32, exFAT).  
+- Es utilizada directamente por software especializado a nivel de bloque.  
+- Usa un formato no reconocible para Windows (como también puede ser las particiones de Linux, ej: ext4, y otras)  
+
+**¿Por qué la reducción podría destruir datos?**  
+
+Al reducir una partición NTFS normal, Windows:
+
+1. Lee los metadatos del sistema de archivos (MFT).  
+2. Sabe dónde se encuentran los archivos.  
+3. Mueve los archivos movibles si es necesario.  
+4. Reduce el tamaño de la partición de forma segura.  
+
+Sin embargo, en una partición RAW:
+
+- No existe una estructura de sistema de archivos.  
+- Windows no puede identificar qué bloques contienen datos críticos.  
+- La operación de reducción puede atravesar bloques de datos activos.  
+- Esto puede provocar una pérdida irreversible de datos.  
+
+**¿Aplica esto a usuarios domésticos típicos?**  
+
+En la mayoría de los casos, **no**.
+
+Si está reduciendo:
+
+- La partición del sistema de Windows (C:)  
+- Una partición de datos NTFS estándar  
+
+Esta advertencia no se aplica.
+
+Se refiere principalmente a:
+
+- Servidores de bases de datos que utilizan almacenamiento sin procesar  
+- Sistemas industriales  
+- Sistemas integrados  
+- Configuraciones de almacenamiento especializadas  
+
+**Práctica recomendada**  
+
+Incluso al reducir particiones NTFS estándar, se recomienda encarecidamente:
+
+- Realizar una copia de seguridad de los datos importantes (Ej: Tesis, tareas, deberes, trabajos, diarios, ediciones de audio, video, etc).  
+- Garantizar la estabilidad del sistema.  
+- Evitar interrupciones de energía durante la operación.  
+
+Los cambios en la partición del disco modifican la estructura del dispositivo de almacenamiento, y fallos inesperados (como un corte de energía) pueden causar daños.
 
 ---
 
