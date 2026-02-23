@@ -2,12 +2,31 @@
 
 # Simulador “Reducir volumen” (Windows)
 
-Herramienta educativa que simula el comportamiento de la ventana **“Reducir volumen”** del Administrador de discos de Windows.
+Este simulador fue creado para ayudarte a entender antes de tocar algo importante en tu computadora.
+Cambiar particiones sin entender lo que sucede puede ser riesgoso.
+Aquí podrás aprender sin peligro.
+
+Esta es una herramienta educativa que simula el comportamiento de la ventana **“Reducir volumen”** del Administrador de discos de Windows.
 
 Este proyecto fue creado para ayudar a entender cómo Windows calcula el espacio reducible antes de instalar Linux o crear nuevas particiones.
 
 ⚠️ **Importante:**
 Esta página **NO modifica discos reales**. Es solo una simulación visual y educativa.
+
+---
+
+## 🧩 ¿Qué es una partición?
+
+Una partición es una división del disco duro.
+
+Es como si tu disco fuera una torta grande y la cortaras en partes.
+Cada parte puede usarse para algo distinto:
+
+- Una parte para Windows
+- Otra parte para Linux
+- Otra parte para guardar archivos
+
+Cuando reduces un volumen, estás haciendo más pequeña una de esas partes para crear espacio nuevo.
 
 ---
 
@@ -148,8 +167,9 @@ Espacio libre: 250 GB
 
 Podrán reducir 250 GB completos.
 
-Pero Windows no calcula el espacio libre visible.
-Calcula el **espacio reducible real**, considerando la ubicación física de los archivos en el disco.
+Windows no solo mira cuánto espacio libre hay.
+También revisa dónde están ubicados los archivos dentro del disco.
+Si hay archivos importantes al final del disco, no podrá reducir más allá de ellos.
 
 Eso es lo que este simulador ayuda a entender visualmente.
 
@@ -228,6 +248,17 @@ Incluso al reducir particiones NTFS estándar, se recomienda encarecidamente:
 - Evitar interrupciones de energía durante la operación.  
 
 Los cambios en la partición del disco modifican la estructura del dispositivo de almacenamiento, y fallos inesperados (como un corte de energía) pueden causar daños.
+
+Si se corta la energía eléctrica mientras Windows está reduciendo el volumen:
+
+- El sistema podría dejar de arrancar.  
+- La partición podría dañarse.  
+- Se podrían perder archivos.  
+
+Por eso es recomendable:
+
+- Usar una laptop con batería cargada.  
+- O tener un UPS si es computadora de escritorio.  
 
 ---
 
