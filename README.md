@@ -1,4 +1,4 @@
-# Simulador de reducción de disco de Windows
+# Windows Disk Shrink Simulator
 
 ![License](https://img.shields.io/badge/license-GPLv3-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-Windows-lightgrey)
@@ -6,268 +6,275 @@
 ![Status](https://img.shields.io/badge/status-Stable-brightgreen)
 ![Educational](https://img.shields.io/badge/purpose-Educational-blueviolet)
 
-Este simulador fue creado para ayudarte a entender antes de tocar algo importante en tu computadora.
-Cambiar particiones sin entender lo que sucede puede ser riesgoso.
-Aquí podrás aprender sin peligro.
+This simulator was created to help you understand what happens before touching something important on your computer.
+Changing partitions without understanding what is happening can be risky.
+Here you can learn safely.
 
-Esta es una herramienta educativa que simula el comportamiento de la ventana **“Reducir volumen”** del Administrador de discos de Windows.
+This is an educational tool that simulates the behavior of the **“Shrink Volume”** window from Windows Disk Management.
 
-Este proyecto fue creado para ayudar a entender cómo Windows calcula el espacio reducible antes de instalar Linux o crear nuevas particiones.
+This project was created to help understand how Windows calculates shrinkable space before installing Linux or creating new partitions.
 
-⚠️ **Importante:**
-Esta página **NO modifica discos reales**. Es solo una simulación visual y educativa.
-
----
-
-## 🧩 ¿Qué es una partición?
-
-Una partición es una división del disco duro.
-
-Es como si tu disco fuera una torta grande y la cortaras en partes.
-Cada parte puede usarse para algo distinto:
-
-- Una parte para Windows
-- Otra parte para Linux
-- Otra parte para guardar archivos
-
-Cuando reduces un volumen, estás haciendo más pequeña una de esas partes para crear espacio nuevo.
+⚠️ **Important:**
+This page does **NOT modify real disks**. It is only a visual and educational simulation.
 
 ---
 
-## Objetivo
+## 🧩 What Is a Partition?
 
-Cuando Windows muestra la ventana **“Reducir volumen (C:)”**, muchas personas no entienden:
+A partition is a division of your hard drive.
 
-* Por qué no pueden reducir todo el espacio libre.
-* Por qué existe un límite que no se puede superar.
-* Qué significa el espacio “no reducible”.
+It is like having a large cake and cutting it into pieces.
+Each piece can be used for something different:
 
-Este simulador reproduce ese comportamiento para comprenderlo mejor antes de hacer cambios reales en el disco.
+* One part for Windows
+* Another part for Linux
+* Another part for storing files
 
----
-
-## 🖥️ Cómo usar el simulador
-
-### Paso 1 — Abrir Windows
-
-En tu computadora:
-
-1. Presiona `Win + X`
-2. Selecciona **Administración de discos**
-3. Clic derecho en la partición **Windows (C:)**
-4. Selecciona **Reducir volumen…**
-
-Windows mostrará una ventana con 3 valores importantes.
+When you shrink a volume, you are making one of those pieces smaller to create new space.
 
 ---
 
-### Paso 2 — Copiar los primeros dos valores
+## Objective
 
-Debes copiar **exactamente** (en MB y sin puntos ni comas):
+When Windows shows the **“Shrink Volume (C:)”** window, many people do not understand:
 
-* ✅ **Tamaño total antes de la reducción**
-* ✅ **Espacio disponible para la reducción**
+* Why they cannot shrink all the free space.
+* Why there is a limit that cannot be exceeded.
+* What “non-shrinkable” space means.
 
-Esos dos valores los ingresas en el simulador web.
-
----
-
-### Paso 3 — Entender la barra del disco
-
-Una vez ingresados los dos primeros valores:
-
-A la derecha aparece la barra de disco simulada.
-
-En esa barra verás:
-
-* 🔵 Zona azul → Windows (después)
-* ⚪ Zona gris rayada → Espacio vacío para Linux
-* 🎚️ Un pequeño control deslizante (divisor)
-
-Ese pequeño control se llama:
-
-> **Divisor de partición** (o simplemente *divisor* / *handle* en términos técnicos).
+This simulator reproduces that behavior so you can understand it before making real changes to your disk.
 
 ---
 
-## 🎚️ Cómo mover correctamente el divisor
+## 🖥️ How to Use the Simulator
 
-Debes:
+### Step 1 — Open Windows Disk Management
 
-1. Hacer clic sobre el divisor.
-2. Mantener presionado el clic.
-3. Arrastrarlo hacia la derecha.
+On your computer:
 
-❗ No podrás moverlo hacia la izquierda más allá del límite (No se puede reducir el espacio asignado más allá del punto en el que se encuentran los archivos no movibles.)
+1. Press `Win + X`
+2. Select **Disk Management**
+3. Right-click on the **Windows (C:)** partition
+4. Select **Shrink Volume…**
 
----
-
-## ❓ ¿Por qué no se puede mover hacia la izquierda?
-
-Porque Windows ya hizo su cálculo interno.
-
-Windows analiza el disco y detecta archivos que **no pueden moverse**, por ejemplo:
-
-* Archivo de paginación (pagefile.sys)
-* Hibernación
-* Metadatos del sistema
-* Fragmentos no desplazables
-* Estructuras internas del sistema NTFS
-
-Por eso aparece un límite máximo.
-
-Ese límite es exactamente el valor que Windows muestra como:
-
-> **“Espacio disponible para la reducción”**
-
-Ese número es el máximo que Windows permite reducir en ese momento.
-
-**Excepto que.-** uses un software de partición de terceros que puede reducir un volumen o partición de archivos inamovibles (los mueve automáticamente) a través de la función Redimensionar partición, como lo hace [AOMEI Partition Assistant](https://www.diskpart.com/es/articles/reducir-volumen-con-archivos-inamovibles-7400-tc.html). Pero sin embago, esto para personas sin experiencia podría ser peligroso, y no quiero llevarlos a hacer cosas sin entender los riezgos, ese es un programa que lo pongo aquí porque yo lo he usado, solo que para usarlo hay que entender bien lo que se hace, hay que tener una capacitación, y es imprescindible sacar un respaldo. En Youtube hay videos donde explican cómo usarlo. Lo que no me gusta es que se demora mucho en todo el proceso de reducción y más rápido es usar el programa de Windows mismo.
+Windows will display a window with 3 important values.
 
 ---
 
-## 📋 Botón “Copiar”
+### Step 2 — Copy the First Two Values
 
-El campo:
+You must copy **exactly** (in MB and without commas or periods):
 
-> “Tamaño del espacio que desea reducir, en MB”
+* ✅ **Total size before shrink**
+* ✅ **Size of available shrink space**
 
-incluye un botón **Copiar**.
-
-Este botón:
-
-* Copia el valor automáticamente al portapapeles.
-* Permite pegarlo directamente en la ventana real de Windows.
+Enter those two values into the web simulator.
 
 ---
 
-## 📱 Uso en móvil
+### Step 3 — Understand the Disk Bar
 
-El diseño es adaptable (responsive):
+After entering the first two values:
 
-* En computadoras → se muestra en dos columnas.
-* En celular → todo se muestra en una sola columna.
+On the right side you will see the simulated disk bar.
 
-Primero aparece el simulador y debajo el resultado.
+In that bar you will see:
+
+* 🔵 Blue area → Windows (after shrink)
+* ⚪ Gray striped area → Empty space for Linux
+* 🎚️ A small slider (divider)
+
+That small control is called:
+
+> **Partition Divider** (or simply *divider* / *handle* in technical terms).
 
 ---
 
-## 🛠️ Cómo está construido
+## 🎚️ How to Move the Divider Correctly
+
+You must:
+
+1. Click on the divider.
+2. Hold the mouse button.
+3. Drag it to the right.
+
+❗ You will not be able to move it further to the left beyond the limit (you cannot shrink the allocated space past the point where unmovable files are located).
+
+---
+
+## ❓ Why Can’t It Be Shrunk Further?
+
+Because Windows has already performed its internal calculation.
+
+Windows analyzes the disk and detects files that **cannot be moved**, for example:
+
+* Paging file (pagefile.sys)
+* Hibernation file
+* System metadata
+* Unmovable fragments
+* Internal NTFS system structures
+
+That is why a maximum limit appears.
+
+That limit is exactly the value Windows shows as:
+
+> **“Size of available shrink space”**
+
+That number is the maximum Windows allows you to shrink at that moment.
+
+**Unless** you use third-party partition software that can attempt to reduce a volume containing unmovable files (by automatically moving them) through a “Resize Partition” function, such as [AOMEI Partition Assistant](https://www.diskpart.com/es/articles/reducir-volumen-con-archivos-inamovibles-7400-tc.html).
+
+However, for inexperienced users this could be dangerous, and I do not want to encourage people to do things without understanding the risks. I mention this program because I have used it myself, but to use it properly you must clearly understand what you are doing, have proper knowledge, and it is essential to make a backup first.
+
+There are YouTube videos explaining how to use it.
+
+What I personally do not like is that it takes a long time during the shrinking process. In many cases, using the Windows built-in tool is faster.
+
+---
+
+## 📋 “Copy” Button
+
+The field:
+
+> “Size of space to shrink (MB)”
+
+includes a **Copy** button.
+
+This button:
+
+* Automatically copies the value to the clipboard.
+* Allows you to paste it directly into the real Windows window.
+
+---
+
+## 📱 Mobile Use
+
+The design is responsive:
+
+* On computers → two-column layout.
+* On mobile devices → single-column layout.
+
+The simulator appears first and the result appears below.
+
+---
+
+## 🛠️ How It Is Built
 
 * HTML
-* CSS (estilo visual tipo Windows 10)
-* JavaScript (lógica del divisor y cálculos)
-* Clipboard API para copiar valores
+* CSS (Windows 10-style visual theme)
+* JavaScript (divider logic and calculations)
+* Clipboard API to copy values
 
-No requiere backend ni instalación.
-
----
-
-## 📘 Concepto importante
-
-Muchas personas creen que si tienen, por ejemplo:
-
-Espacio libre: 250 GB
-
-Podrán reducir 250 GB completos.
-
-Windows no solo mira cuánto espacio libre hay.
-También revisa dónde están ubicados los archivos dentro del disco.
-Si hay archivos importantes al final del disco, no podrá reducir más allá de ellos.
-
-Eso es lo que este simulador ayuda a entender visualmente.
+No backend or installation required.
 
 ---
 
-## ⚠️ Explicación de la advertencia oficial de Microsoft
+## 📘 Important Concept
 
-La [documentación de Microsoft](https://learn.microsoft.com/es-es/windows-server/storage/disk-management/shrink-a-basic-volume) incluye la siguiente advertencia:
+Many people believe that if they have, for example:
 
-> "Si la partición es una partición sin formato que contiene datos, como un archivo de base de datos, reducirla podría destruir los datos".
+Free space: 250 GB
 
-**¿Qué significa esto?**  
+They will be able to shrink 250 GB completely.
 
-Esta advertencia se refiere específicamente a las **particiones sin formato reconocible por Windows**, es decir, no se refiere al "Disco C:" que un usuario normal usa, sino a otra partición que no está formateada como NTFS
+Windows does not only look at how much free space exists.
+It also checks where files are physically located on the disk.
 
-Ejemplo típico en servidores:  
+If there are important files near the end of the disk, Windows will not be able to shrink beyond them.
 
-- El administrador crea un disco adicional.  
-- Ese disco NO se formatea con NTFS.  
-- Se entrega directamente al motor de base de datos.  
-- SQL Server escribe datos directamente a nivel de bloque.  
-
-En ese caso:
-
-- Windows no ve archivos.  
-- No hay MFT (Tabla Maestra de Archivos)  
-- No hay estructura NTFS.  
-- El volumen aparece como RAW.  
-
-Pero SQL Server sí sabe qué bloques contienen datos.
-
-Una partición sin formato es una partición que:
-
-- No utiliza un sistema de archivos reconocido (NTFS, FAT32, exFAT).  
-- Es utilizada directamente por software especializado a nivel de bloque.  
-- Usa un formato no reconocible para Windows (como también puede ser las particiones de Linux, ej: ext4, y otras)  
-
-**¿Por qué la reducción podría destruir datos?**  
-
-Al reducir una partición NTFS normal, Windows:
-
-1. Lee los metadatos del sistema de archivos (MFT).  
-2. Sabe dónde se encuentran los archivos.  
-3. Mueve los archivos movibles si es necesario.  
-4. Reduce el tamaño de la partición de forma segura.  
-
-Sin embargo, en una partición RAW:
-
-- No existe una estructura de sistema de archivos.  
-- Windows no puede identificar qué bloques contienen datos críticos.  
-- La operación de reducción puede atravesar bloques de datos activos.  
-- Esto puede provocar una pérdida irreversible de datos.  
-
-**¿Aplica esto a usuarios domésticos típicos?**  
-
-Si está reduciendo:
-
-- La partición del sistema de Windows (C:)  
-- Una partición de datos NTFS estándar  
-
-Esta advertencia no se aplica.
-
-Se refiere principalmente a:
-
-- Servidores de bases de datos que utilizan almacenamiento sin procesar  
-- Sistemas industriales  
-- Sistemas integrados  
-- Configuraciones de almacenamiento especializadas  
-
-**Práctica recomendada**  
-
-Incluso al reducir particiones NTFS estándar, se recomienda encarecidamente:
-
-- Realizar una copia de seguridad de los datos importantes (Ej: Tesis, tareas, deberes, trabajos, diarios, ediciones de audio, video, etc).  
-- Garantizar la estabilidad del sistema.  
-- Evitar interrupciones de energía durante la operación.  
-
-Los cambios en la partición del disco modifican la estructura del dispositivo de almacenamiento, y fallos inesperados (como un corte de energía) pueden causar daños.
-
-Si se corta la energía eléctrica mientras Windows está reduciendo el volumen:
-
-- El sistema podría dejar de arrancar.  
-- La partición podría dañarse.  
-- Se podrían perder archivos.  
-
-Por eso es recomendable:
-
-- Usar una laptop con batería cargada.  
-- O tener un UPS si es computadora de escritorio.  
+That is what this simulator helps you understand visually.
 
 ---
 
-## 📄 Licencia
+## ⚠️ Explanation of the Official Microsoft Warning
 
-Proyecto educativo de libre uso, con licencia GPL 3
+The [Microsoft documentation](https://learn.microsoft.com/en-us/windows-server/storage/disk-management/shrink-a-basic-volume) includes the following warning:
+
+> "If the partition is a raw partition that contains data, such as a database file, shrinking the partition might destroy the data."
+
+### What does this mean?
+
+This warning refers specifically to **partitions that Windows cannot recognize or interpret**, meaning it does not refer to the typical “C:” drive used by normal users, but to another partition that is not formatted as NTFS.
+
+Typical server example:
+
+* The administrator creates an additional disk.
+* That disk is NOT formatted with NTFS.
+* It is provided directly to a database engine.
+* SQL Server writes data directly at block level.
+
+In that case:
+
+* Windows does not see files.
+* There is no MFT (Master File Table).
+* There is no NTFS structure.
+* The volume appears as RAW.
+
+But SQL Server knows which blocks contain data.
+
+A raw partition is one that:
+
+* Does not use a filesystem recognized by Windows (NTFS, FAT32, exFAT).
+* Is used directly by specialized software at block level.
+* Uses a format not recognized by Windows (such as Linux partitions like ext4, and others).
+
+### Why could shrinking destroy data?
+
+When shrinking a normal NTFS partition, Windows:
+
+1. Reads the filesystem metadata (MFT).
+2. Knows where files are located.
+3. Moves movable files if necessary.
+4. Shrinks the partition safely.
+
+However, in a RAW partition:
+
+* There is no filesystem structure.
+* Windows cannot identify which blocks contain critical data.
+* The shrink operation may cut through active data blocks.
+* This can cause irreversible data loss.
+
+### Does this apply to typical home users?
+
+If you are shrinking:
+
+* The Windows system partition (C:)
+* A standard NTFS data partition
+
+This warning does not apply.
+
+It mainly refers to:
+
+* Database servers using raw storage
+* Industrial systems
+* Embedded systems
+* Specialized storage configurations
+
+### Recommended Practice
+
+Even when shrinking standard NTFS partitions, it is strongly recommended to:
+
+* Make a backup of important files (e.g., thesis, assignments, work documents, audio/video projects, etc.).
+* Ensure system stability.
+* Avoid power interruptions during the operation.
+
+Partition changes modify the structure of the storage device, and unexpected failures (such as a power outage) can cause damage.
+
+If the power goes out while Windows is shrinking the volume:
+
+* The system may fail to boot.
+* The partition may become damaged.
+* Files may be lost.
+
+For that reason, it is recommended to:
+
+* Use a laptop with a charged battery.
+* Or use a UPS if using a desktop computer.
+
+---
+
+## 📄 License
+
+Educational project for free use, licensed under GPL 3.
 
 ---
