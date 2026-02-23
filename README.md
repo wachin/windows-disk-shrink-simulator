@@ -175,7 +175,7 @@ Ejemplo típico en servidores:
 En ese caso:
 
 - Windows no ve archivos.  
-- No hay MFT.  
+- No hay MFT (Tabla Maestra de Archivos)  
 - No hay estructura NTFS.  
 - El volumen aparece como RAW.  
 
@@ -204,8 +204,6 @@ Sin embargo, en una partición RAW:
 - Esto puede provocar una pérdida irreversible de datos.  
 
 **¿Aplica esto a usuarios domésticos típicos?**  
-
-En la mayoría de los casos, **no**.
 
 Si está reduciendo:
 
