@@ -109,6 +109,8 @@ Nunca podrás superar el valor de:
 
 El simulador respeta esa regla igual que Windows.
 
+**Salvo que.-** uses un software de partición de terceros que puede fácilmente reducir (pero se toma su tiempo) un volumen o reducir la partición de archivos inamovibles (los mueve automáticamente) a través de la función Redimensionar partición, como lo hace [AOMEI Partition Assistant](https://www.diskpart.com/es/articles/reducir-volumen-con-archivos-inamovibles-7400-tc.html)  
+
 ---
 
 ## 📋 Botón “Copiar”
