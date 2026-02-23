@@ -1,4 +1,10 @@
-# Disk Shrink Simulator (Windows)
+# Windows Disk Shrink Simulator
+
+![License](https://img.shields.io/badge/license-GPLv3-blue.svg)
+![Platform](https://img.shields.io/badge/platform-Windows-lightgrey)
+![Built With](https://img.shields.io/badge/built%20with-HTML%2FCSS%2FJS-orange)
+![Status](https://img.shields.io/badge/status-Stable-brightgreen)
+![Educational](https://img.shields.io/badge/purpose-Educational-blueviolet)
 
 This simulator was created to help you understand what happens before touching something important on your computer.
 Changing partitions without understanding what is happening can be risky.

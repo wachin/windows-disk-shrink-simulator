@@ -1,6 +1,10 @@
-# reducir-disco
+# Simulador de reducción de disco de Windows
 
-# Simulador “Reducir volumen” (Windows)
+![License](https://img.shields.io/badge/license-GPLv3-blue.svg)
+![Platform](https://img.shields.io/badge/platform-Windows-lightgrey)
+![Built With](https://img.shields.io/badge/built%20with-HTML%2FCSS%2FJS-orange)
+![Status](https://img.shields.io/badge/status-Stable-brightgreen)
+![Educational](https://img.shields.io/badge/purpose-Educational-blueviolet)
 
 Este simulador fue creado para ayudarte a entender antes de tocar algo importante en tu computadora.
 Cambiar particiones sin entender lo que sucede puede ser riesgoso.
