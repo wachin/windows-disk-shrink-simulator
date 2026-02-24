@@ -7,12 +7,13 @@
 ![Educational](https://img.shields.io/badge/purpose-Educational-blueviolet)
 
 Este simulador fue creado para ayudarte a entender antes de tocar algo importante en tu computadora.
-Cambiar particiones sin entender lo que sucede puede ser riesgoso.
-Aquí podrás aprender sin peligro.
+Cambiar particiones sin entender lo que sucede puede ser riesgoso. Aquí podrás aprender sin peligro.
 
 Esta es una herramienta educativa que simula el comportamiento de la ventana **“Reducir volumen”** del Administrador de discos de Windows.
 
-Este proyecto fue creado para ayudar a entender cómo Windows calcula el espacio reducible antes de instalar Linux o crear nuevas particiones.
+Este proyecto fue creado para ayudar a entender cómo Windows calcula el espacio reducible antes de instalar Linux o crear nuevas particiones:
+
+[https://wachin.github.io/windows-disk-shrink-simulator/](https://wachin.github.io/windows-disk-shrink-simulator/)
 
 ⚠️ **Importante:**
 Esta página **NO modifica discos reales**. Es solo una simulación visual y educativa.

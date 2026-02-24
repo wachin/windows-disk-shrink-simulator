@@ -6,13 +6,13 @@
 ![Status](https://img.shields.io/badge/status-Stable-brightgreen)
 ![Educational](https://img.shields.io/badge/purpose-Educational-blueviolet)
 
-This simulator was created to help you understand what happens before touching something important on your computer.
-Changing partitions without understanding what is happening can be risky.
-Here you can learn safely.
+This simulator was created to help you understand what happens before touching something important on your computer. Changing partitions without understanding what is happening can be risky. Here you can learn safely.
 
 This is an educational tool that simulates the behavior of the **“Shrink Volume”** window from Windows Disk Management.
 
-This project was created to help understand how Windows calculates shrinkable space before installing Linux or creating new partitions.
+This project was created to help understand how Windows calculates shrinkable space before installing Linux or creating new partitions:
+
+[https://wachin.github.io/windows-disk-shrink-simulator/](https://wachin.github.io/windows-disk-shrink-simulator/)
 
 ⚠️ **Important:**
 This page does **NOT modify real disks**. It is only a visual and educational simulation.
