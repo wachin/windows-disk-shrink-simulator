@@ -119,7 +119,7 @@ main{
 
 .winRow{
   display:grid;
-  grid-template-columns: 1fr 180px;
+  grid-template-columns: 1fr 200px;
   gap:10px;
   align-items:center;
 }
