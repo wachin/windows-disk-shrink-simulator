@@ -25,3 +25,20 @@ esto es porque está así:
 ![](images/01-Descripcion-de-los-componentes-label-e-input-en-el-simulador.png)
 
 
+y para solucionarlo le pongo en el input "200px":
+
+```css
+.winRow{
+  display:grid;
+  grid-template-columns: 1fr 200px;
+  gap:10px;
+  align-items:center;
+}
+```
+
+y queda así:
+
+![](images/02-en-display-grid-en-input-con-200px.png)
+
+
+
