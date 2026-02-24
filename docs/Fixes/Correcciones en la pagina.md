@@ -1,5 +1,5 @@
 
-# Problema de espacio en el Simulador
+# Problema en el Simulador, mucho espacio en input afecta el texto de label
 
 Tengo un problema, en el "Simulador" el primer valor:
 
@@ -57,6 +57,53 @@ Para hacer que ocupe menos, al botón "Copiar" mejor lo dejo así:
 y queda así:
 
 ![](images/03-reduciendo-el-tamano-del-boton-copiar.png)
+
+
+# Solución a label recogido en celulares
+
+En los celulares, label se recoge, como se ve en la siguiente imagen:
+
+![](images/04.2-en-los-celulares-no-se-ve-bien.jpg)
+
+Para solucionarlo, hay que hacer que se ponga encima de input, para esto añadiré al final del archivo lo siguiente:
+
+```css
+/* ===== Mobile: labels arriba, inputs abajo ===== */
+@media (max-width: 520px){
+  .winRow{
+    grid-template-columns: 1fr;   /* una sola columna */
+    gap: 6px;                     /* menos espacio vertical */
+    align-items: start;
+  }
+
+  .winLabel{
+    margin-top: 4px;
+  }
+
+  /* La celda derecha (input) ocupa todo el ancho */
+  .winInput{
+    width: 100%;
+  }
+
+  /* Fila que tiene input + botón Copiar */
+  .winField{
+    width: 100%;
+  }
+
+  /* Opcional: que el input + botón se acomoden mejor */
+  .winField{
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    align-items: center;
+  }
+
+  /* Para que el input no se haga gigantesco verticalmente */
+  .winBtn--copy{
+    justify-self: end;
+  }
+}
+```
 
 
 

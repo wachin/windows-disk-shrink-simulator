@@ -351,3 +351,40 @@ main{
   color: #111;
 }
 .instructions b{font-weight:700;}
+
+/* ===== Mobile: labels arriba, inputs abajo ===== */
+
+@media (max-width: 520px){
+  .winRow{
+    grid-template-columns: 1fr;   /* una sola columna */
+    gap: 6px;                     /* menos espacio vertical */
+    align-items: start;
+  }
+
+  .winLabel{
+    margin-top: 4px;
+  }
+
+  /* La celda derecha (input) ocupa todo el ancho */
+  .winInput{
+    width: 100%;
+  }
+
+  /* Fila que tiene input + botón Copiar */
+  .winField{
+    width: 100%;
+  }
+
+  /* Opcional: que el input + botón se acomoden mejor */
+  .winField{
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+    align-items: center;
+  }
+
+  /* Para que el input no se haga gigantesco verticalmente */
+  .winBtn--copy{
+    justify-self: end;
+  }
+}
