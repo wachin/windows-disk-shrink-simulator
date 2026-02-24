@@ -217,7 +217,7 @@ main{
 
 .winBtn--copy{
   height:26px;
-  padding:0 6px;   /* antes era 12px */
+  padding:0 4px;   /* antes era 12px */
   font-size:12.5px;
   white-space:nowrap;
 }

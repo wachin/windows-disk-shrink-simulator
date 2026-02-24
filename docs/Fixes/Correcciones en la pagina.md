@@ -41,4 +41,25 @@ y queda así:
 ![](images/02-en-display-grid-en-input-con-200px.png)
 
 
+# Reduciendo el tamaño del ancho del botón "Copiar"
+
+Para hacer que ocupe menos, al botón "Copiar" mejor lo dejo así:
+
+```css
+.winBtn--copy{
+  height:26px;
+  padding:0 4px;   /* antes era 12px */
+  font-size:12.5px;
+  white-space:nowrap;
+}
+```
+
+y queda así:
+
+![](images/03-reduciendo-el-tamano-del-boton-copiar.png)
+
+
+
+
+
 
