@@ -105,6 +105,12 @@ Para solucionarlo, hay que hacer que se ponga encima de input, para esto añadir
 }
 ```
 
+**¿Qué hace esto?**
+
+- En móvil, cada fila pasa de: **[label | input]**
+  a: **label arriba + input debajo**
+- En la fila del botón “Copiar”, deja: **input y botón** en la misma línea, bien acomodados.
+
 
 
 

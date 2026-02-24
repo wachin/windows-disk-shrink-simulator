@@ -387,4 +387,9 @@ main{
   .winBtn--copy{
     justify-self: end;
   }
+  
+  /* Reducir Padding (espacio por dentro de un elemento), entre borde y el contenido, de 12 a 8px */
+  .winContent{
+    padding: 8px;
+  }
 }
