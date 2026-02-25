@@ -69,32 +69,78 @@ body{margin:0;background:#f2f2f2;color:#111;font-family:"Segoe UI",system-ui,-ap
 </div>
 <div aria-live="polite" class="msg" id="statusMsg" role="status"></div>
 </div></div></div></div></div></section><section class="card">
-<h2>Explicación rápida</h2>
-<div class="edu">
-<div class="edu__item">
-<div class="edu__icon">⛔</div>
-<div>
-<b>¿Por qué Windows limita el máximo?</b><br/>
-            Hay archivos “difíciles de mover” (paginación, hibernación, restauración). Windows calcula un máximo “seguro”. Si alguno de estos está ubicado cerca del “final” de la partición, Windows no permite reducir más allá de ese punto, pero si usted necesita más espacio puede hacerlo con una herramienta externa como
-			<a class="edu-link" href="https://www.diskpart.com/es/articles/reducir-volumen-con-archivos-inamovibles-7400-tc.html" rel="noopener" target="_blank">
-		    AOMEI Partition Assistant
-		    </a>.
-          </div>
-</div>
-<div class="edu__item">
-<div class="edu__icon">📏</div>
-<div>
-<b>¿Qué significa “Tamaño total después”?</b><br/>
-            Es lo que quedará para Windows. Lo recortado queda como espacio libre para Linux u otro Sistema Operativo, o alguna partición que desees crear para tener allí algo.
-          </div>
-</div>
-<div class="edu__item">
-<div class="edu__icon">⚠️</div>
-<div>
-<b>Importante:</b> Esta página NO hace cambios reales en tu disco. Solo simula números y proporción. La hice porque lo más rapido es usar la herramienta de Windows mismo para "Reducir" espacio en Disco, y los de Microsoft aunque tienen la capacidad de hacerlo nunca hicieron una herramienta visual para mostrar el espacio a dejar para otro Sistema Operativo.
-          </div>
-</div>
-</div>
+<h2>Guía: “Reducir volumen” (Windows)</h2>
+
+  <div class="edu">
+    <div class="edu__item">
+      <div class="edu__icon">📌</div>
+      <div>
+        <b>¿Qué es “Reducir volumen”?</b><br/>
+        La opción <b>Reducir volumen</b> permite disminuir el tamaño de una partición existente (por ejemplo, la unidad <b>C:</b>)
+        para dejar <b>espacio no asignado</b> en el disco.
+        <ul class="eduList">
+          <li>Instalar otro sistema operativo (como Linux).</li>
+          <li>Crear una nueva partición para datos.</li>
+          <li>Separar el sistema de los archivos personales.</li>
+          <li>Organizar mejor el disco.</li>
+        </ul>
+        <b>No borra archivos automáticamente</b>, pero siempre es recomendable hacer una copia de seguridad antes.
+      </div>
+    </div>
+
+    <div class="edu__item">
+      <div class="edu__icon">1️⃣</div>
+      <div>
+        <b>Tamaño total antes de la reducción (en MB)</b><br/>
+        Es el tamaño actual de la partición antes de hacer cambios.
+      </div>
+    </div>
+
+    <div class="edu__item">
+      <div class="edu__icon">2️⃣</div>
+      <div>
+        <b>Espacio disponible para la reducción (en MB)</b><br/>
+        Este punto confunde mucho: <b>no es el espacio libre total</b>.<br/>
+        Es el <b>máximo que Windows te permite reducir en ese momento</b> (máximo permitido). A veces este máximo es menor de lo esperado
+        porque Windows no puede mover ciertos archivos del sistema mientras está en uso (paginación, hibernación, restauración, etc.).
+      </div>
+    </div>
+
+    <div class="edu__item">
+      <div class="edu__icon">3️⃣</div>
+      <div>
+        <b>Tamaño del espacio que desea reducir (en MB)</b><br/>
+        Aquí decides cuánto quieres reducir. Puedes escribir un valor <b>igual o menor</b> al “Espacio disponible para la reducción”.
+        Lo que reduzcas quedará como <b>espacio no asignado</b>.<br/>
+        En esta página, el panel <b>“Administrador de discos (simulación)”</b> te lo muestra también en <b>GB</b> para entenderlo mejor.
+      </div>
+    </div>
+
+    <div class="edu__item">
+      <div class="edu__icon">4️⃣</div>
+      <div>
+        <b>Tamaño total después de la reducción (en MB)</b><br/>
+        Es el tamaño con el que quedará la partición después de reducir.<br/>
+        <b>Tamaño antes</b> − <b>Tamaño a reducir</b> = <b>Tamaño después</b> (y en la simulación también lo verás en GB).
+      </div>
+    </div>
+
+    <div class="edu__item">
+      <div class="edu__icon">✅</div>
+      <div>
+        <b>¿Qué pasa después de “Reducir”?</b><br/>
+        En Windows aparecerá un bloque en negro llamado <b>“Espacio no asignado”</b>.
+        Puedes crear una nueva partición ahí, o dejarlo así para que el instalador de Linux lo use durante la instalación.
+      </div>
+    </div>
+
+    <div class="edu__item">
+      <div class="edu__icon">⚠️</div>
+      <div>
+        <b>Importante:</b> Esta página no hace cambios reales en tu disco. Solo simula números y proporciones.
+      </div>
+    </div>
+  </div>
 </section></main>
 <footer class="footer">
 <div class="footer__cta">
