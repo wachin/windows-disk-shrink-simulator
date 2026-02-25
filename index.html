@@ -141,7 +141,314 @@ body{margin:0;background:#f2f2f2;color:#111;font-family:"Segoe UI",system-ui,-ap
       </div>
     </div>
   </div>
-</section></main>
+</section>
+<section class="card">
+  <h2>🖥️ Cómo usar el simulador (con explicaciones muy detalladas)</h2>
+
+  <h3>📌 Paso 1 — Abrir Windows</h3>
+  <p>En tu computadora:</p>
+  <ol>
+    <li>Presiona <code>Win + X</code></li>
+    <li>Selecciona <b>Administración de discos</b></li>
+    <li>Clic derecho en la partición <b>Windows (C:)</b></li>
+    <li>Selecciona <b>Reducir volumen…</b></li>
+  </ol>
+
+  <p>Windows mostrará una ventana con <b>3 valores importantes</b>.</p>
+
+  <hr/>
+
+  <h3>📋 Paso 2 — Copiar los primeros dos valores</h3>
+  <p>Debes copiar <b>exactamente</b> (en MB y sin puntos ni comas):</p>
+
+  <ul>
+    <li>✅ <b>Tamaño total antes de la reducción</b></li>
+    <li>✅ <b>Espacio disponible para la reducción</b></li>
+  </ul>
+
+  <p>Esos dos valores los ingresas en el simulador web.</p>
+
+  <hr/>
+
+  <h3>📊 Paso 3 — Entender la barra del disco</h3>
+
+  <p>Una vez ingresados los dos primeros valores:</p>
+  <p>A la derecha aparece la barra de disco simulada.</p>
+
+  <p>En esa barra verás:</p>
+
+  <ul>
+    <li>🔵 Zona azul → <b>Windows (después)</b></li>
+    <li>⚪ Zona gris rayada → <b>Espacio vacío para Linux</b></li>
+    <li>🎚️ Un pequeño control deslizante (divisor)</li>
+  </ul>
+
+  <p>
+    Ese pequeño control se llama:<br/>
+    <b>Divisor de partición</b> (o simplemente <i>divisor</i> / <i>handle</i> en términos técnicos).
+  </p>
+
+  <hr/>
+
+  <h3>🎚️ Cómo mover correctamente el divisor</h3>
+
+  <ol>
+    <li>Hacer clic sobre el divisor.</li>
+    <li>Mantener presionado el clic.</li>
+    <li>Arrastrarlo hacia la derecha.</li>
+  </ol>
+
+  <p>
+    ❗ No podrás moverlo hacia la izquierda más allá del límite 
+    (<i>No se puede reducir el espacio asignado más allá del punto en el que se encuentran los archivos no movibles.</i>)
+  </p>
+
+  <hr/>
+
+  <h3>❓ ¿Por qué no se puede mover hacia la izquierda?</h3>
+
+  <p>Porque Windows ya hizo su cálculo interno.</p>
+
+  <p>
+    Windows analiza el disco y detecta archivos que <b>no pueden moverse</b>, por ejemplo:
+  </p>
+
+  <ul>
+    <li>Archivo de paginación (<code>pagefile.sys</code>)</li>
+    <li>Hibernación</li>
+    <li>Metadatos del sistema</li>
+    <li>Fragmentos no desplazables</li>
+    <li>Estructuras internas del sistema NTFS</li>
+  </ul>
+
+  <p>
+    Por eso aparece un límite máximo.
+  </p>
+
+  <p>
+    Ese límite es exactamente el valor que Windows muestra como:<br/>
+    <b>“Espacio disponible para la reducción”</b>
+  </p>
+
+  <p>
+    Ese número es el máximo que Windows permite reducir en ese momento.
+  </p>
+
+  <p>
+    <b>Excepto que.-</b> uses un software de partición de terceros que puede reducir un volumen o partición de archivos inamovibles (los mueve automáticamente) a través de la función Redimensionar partición, como lo hace 
+    <a href="https://www.diskpart.com/es/articles/reducir-volumen-con-archivos-inamovibles-7400-tc.html" target="_blank">
+      AOMEI Partition Assistant
+    </a>.
+  </p>
+
+  <p>
+    Pero sin embago, esto para personas sin experiencia podría ser peligroso, y no quiero llevarlos a hacer cosas sin entender los riezgos, ese es un programa que lo pongo aquí porque yo lo he usado, solo que para usarlo hay que entender bien lo que se hace, hay que tener una capacitación, y es imprescindible sacar un respaldo. En Youtube hay videos donde explican cómo usarlo. Lo que no me gusta es que se demora mucho en todo el proceso de reducción y más rápido es usar el programa de Windows mismo.
+  </p>
+
+  <hr/>
+
+  <h3>📋 Botón “Copiar”</h3>
+
+  <p>
+    El campo:
+  </p>
+
+  <blockquote>
+    “Tamaño del espacio que desea reducir, en MB”
+  </blockquote>
+
+  <p>
+    incluye un botón <b>Copiar</b>.
+  </p>
+
+  <ul>
+    <li>Copia el valor automáticamente al portapapeles.</li>
+    <li>Permite pegarlo directamente en la ventana real de Windows.</li>
+  </ul>
+
+  <hr/>
+
+  <h3>📱 Uso en móvil</h3>
+
+  <ul>
+    <li>En computadoras → se muestra en dos columnas.</li>
+    <li>En celular → todo se muestra en una sola columna.</li>
+  </ul>
+
+  <p>
+    Primero aparece el simulador y debajo el resultado.
+  </p>
+
+  <hr/>
+
+  <h3>🛠️ Cómo está construido</h3>
+
+  <ul>
+    <li>HTML</li>
+    <li>CSS (estilo visual tipo Windows 10)</li>
+    <li>JavaScript (lógica del divisor y cálculos)</li>
+    <li>Clipboard API para copiar valores</li>
+  </ul>
+
+  <p>No requiere backend ni instalación.</p>
+
+  <hr/>
+
+  <h3>📘 Concepto importante</h3>
+
+  <p>
+    Muchas personas creen que si tienen, por ejemplo:
+  </p>
+
+  <p><b>Espacio libre: 250 GB</b></p>
+
+  <p>
+    Podrán reducir 250 GB completos.
+  </p>
+
+  <p>
+    Windows no solo mira cuánto espacio libre hay.
+    También revisa dónde están ubicados los archivos dentro del disco.
+    Si hay archivos importantes al final del disco, no podrá reducir más allá de ellos.
+  </p>
+
+  <p>
+    Eso es lo que este simulador ayuda a entender visualmente.
+  </p>
+
+  <hr/>
+
+  <h3>⚠️ Explicación de la advertencia oficial de Microsoft</h3>
+
+  <p>
+    La 
+    <a href="https://learn.microsoft.com/es-es/windows-server/storage/disk-management/shrink-a-basic-volume" target="_blank">
+      documentación de Microsoft
+    </a>
+    incluye la siguiente advertencia:
+  </p>
+
+  <blockquote>
+    "Si la partición es una partición sin formato que contiene datos, como un archivo de base de datos, reducirla podría destruir los datos".
+  </blockquote>
+
+  <p><b>¿Qué significa esto?</b></p>
+
+  <p>
+    Esta advertencia se refiere específicamente a las <b>particiones sin formato reconocible por Windows</b>, es decir, no se refiere al "Disco C:" que un usuario normal usa, sino a otra partición que no está formateada como NTFS
+  </p>
+
+  <p><b>Ejemplo típico en servidores:</b></p>
+
+  <ul>
+    <li>El administrador crea un disco adicional.</li>
+    <li>Ese disco NO se formatea con NTFS.</li>
+    <li>Se entrega directamente al motor de base de datos.</li>
+    <li>SQL Server escribe datos directamente a nivel de bloque.</li>
+  </ul>
+
+  <p>En ese caso:</p>
+
+  <ul>
+    <li>Windows no ve archivos.</li>
+    <li>No hay MFT (Tabla Maestra de Archivos)</li>
+    <li>No hay estructura NTFS.</li>
+    <li>El volumen aparece como RAW.</li>
+  </ul>
+
+  <p>
+    Pero SQL Server sí sabe qué bloques contienen datos.
+  </p>
+
+  <p>
+    Una partición sin formato es una partición que:
+  </p>
+
+  <ul>
+    <li>No utiliza un sistema de archivos reconocido (NTFS, FAT32, exFAT).</li>
+    <li>Es utilizada directamente por software especializado a nivel de bloque.</li>
+    <li>Usa un formato no reconocible para Windows (como también puede ser las particiones de Linux, ej: ext4, y otras).</li>
+  </ul>
+
+  <p><b>¿Por qué la reducción podría destruir datos?</b></p>
+
+  <p>Al reducir una partición NTFS normal, Windows:</p>
+
+  <ol>
+    <li>Lee los metadatos del sistema de archivos (MFT).</li>
+    <li>Sabe dónde se encuentran los archivos.</li>
+    <li>Mueve los archivos movibles si es necesario.</li>
+    <li>Reduce el tamaño de la partición de forma segura.</li>
+  </ol>
+
+  <p>Sin embargo, en una partición RAW:</p>
+
+  <ul>
+    <li>No existe una estructura de sistema de archivos.</li>
+    <li>Windows no puede identificar qué bloques contienen datos críticos.</li>
+    <li>La operación de reducción puede atravesar bloques de datos activos.</li>
+    <li>Esto puede provocar una pérdida irreversible de datos.</li>
+  </ul>
+
+  <p><b>¿Aplica esto a usuarios domésticos típicos?</b></p>
+
+  <p>
+    Si está reduciendo:
+  </p>
+
+  <ul>
+    <li>La partición del sistema de Windows (C:)</li>
+    <li>Una partición de datos NTFS estándar</li>
+  </ul>
+
+  <p>
+    Esta advertencia no se aplica.
+  </p>
+
+  <p>
+    Se refiere principalmente a:
+  </p>
+
+  <ul>
+    <li>Servidores de bases de datos que utilizan almacenamiento sin procesar</li>
+    <li>Sistemas industriales</li>
+    <li>Sistemas integrados</li>
+    <li>Configuraciones de almacenamiento especializadas</li>
+  </ul>
+
+  <p><b>Práctica recomendada</b></p>
+
+  <ul>
+    <li>Realizar una copia de seguridad de los datos importantes (Ej: Tesis, tareas, deberes, trabajos, diarios, ediciones de audio, video, etc).</li>
+    <li>Garantizar la estabilidad del sistema.</li>
+    <li>Evitar interrupciones de energía durante la operación.</li>
+  </ul>
+
+  <p>
+    Los cambios en la partición del disco modifican la estructura del dispositivo de almacenamiento, y fallos inesperados (como un corte de energía) pueden causar daños.
+  </p>
+
+  <p>
+    Si se corta la energía eléctrica mientras Windows está reduciendo el volumen:
+  </p>
+
+  <ul>
+    <li>El sistema podría dejar de arrancar.</li>
+    <li>La partición podría dañarse.</li>
+    <li>Se podrían perder archivos.</li>
+  </ul>
+
+  <p>
+    Por eso es recomendable:
+  </p>
+
+  <ul>
+    <li>Usar una laptop con batería cargada.</li>
+    <li>O tener un UPS si es computadora de escritorio.</li>
+  </ul>
+
+</section>
+</main>
 <footer class="footer">
 <div class="footer__cta">
 <div class="footer__title">¿Te sirvió? Haz fork, traduce, mejora el simulador 👇</div>
