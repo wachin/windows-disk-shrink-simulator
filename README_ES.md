@@ -203,6 +203,7 @@ En ese caso:
 - No hay MFT (Tabla Maestra de Archivos)  
 - No hay estructura NTFS.  
 - El volumen aparece como RAW.  
+- 
 
 Pero SQL Server sí sabe qué bloques contienen datos.
 

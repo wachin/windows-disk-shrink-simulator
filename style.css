@@ -393,3 +393,12 @@ main{
     padding: 8px;
   }
 }
+
+/* Listas dentro de la sección educativa */
+.eduList{
+  margin: 8px 0 8px 18px;
+  padding: 0;
+}
+.eduList li{
+  margin: 4px 0;
+}
