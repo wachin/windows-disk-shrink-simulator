@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>Simulador “Reducir volumen” (Windows) — Educativo</title>
+<link href="./logo.svg" rel="icon" type="image/svg+xml"/>
+<link href="./style.css" rel="stylesheet"/>
+<!-- CSS crítico (fallback por si style.css no carga) -->
+<style>
+body{margin:0;background:#f2f2f2;color:#111;font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial}
+    .brand__logo{width:44px;height:44px;display:block}
+    .js-warning{max-width:1100px;margin:10px auto 0;padding:0 18px}
+    .js-warning__box{border:1px dashed #cfcfcf;background:#fff;border-radius:14px;padding:10px 12px;color:#111;font-size:13px;line-height:1.35rem;display:none;}
+  </style>
+</head>
+<body>
+<!-- Mensaje si app.js no está cargando -->
+<div class="js-warning">
+<div class="js-warning__box" id="jsNotRunning">
+      ⚠️ Parece que <b>app.js</b> o <b>style.css</b> no se están cargando en GitHub Pages (rutas o nombres).
+      Revisa que los archivos estén en la <b>raíz</b> del repo y se llamen exactamente:
+      <b>index.html</b>, <b>style.css</b>, <b>app.js</b>, <b>logo.svg</b>.
+    </div>
+</div>
+<header class="topbar">
+<div class="brand">
+<!-- Fallback tamaño fijo para que NO se haga gigante si falla CSS -->
+<img alt="Logo" class="brand__logo" height="44" src="./logo.svg" width="44"/>
+<div class="brand__text">
+<h1>Simulador “Reducir volumen” (Windows)</h1>
+<p>Herramienta educativa para entender cómo se divide el disco antes de instalar Linux.</p>
+</div>
+</div>
+<div class="badge">
+<span class="dot"></span>
+<span>Solo simulación — NO toca discos reales</span>
+</div>
+</header>
+<main class="container"><div class="instructions" role="note"><b>Indicaciones:</b> Abre Administración de discos → clic derecho en la partición de Windows (C:) → Reducir volumen… Copia los dos primeros números exactamente como aparecen (en MB y sin comas ni puntos). Luego ajusta cuánto deseas reducir y mira el resultado a la derecha.</div>
+<section class="card card--sim"><h2>Simulador</h2><div class="simLayout"><div class="simLeft"><div aria-label="Reducir C" class="winDialog" role="dialog"><div class="winTitlebar"><div class="winTitle">Reducir C:</div></div><div class="winContent"><div class="winRow"><label class="winLabel" for="totalBeforeMb">Tamaño total antes de la reducción, en MB:</label><input autocomplete="off" class="winInput" id="totalBeforeMb" inputmode="numeric" placeholder="(vacío)" type="text"/></div><div class="winRow"><label class="winLabel" for="shrinkAvailableMb">Espacio disponible para la reducción, en MB:</label><input autocomplete="off" class="winInput" id="shrinkAvailableMb" inputmode="numeric" placeholder="(vacío)" type="text"/></div><div class="winRow"><label class="winLabel" for="shrinkDesiredMb">Tamaño del espacio que desea reducir, en MB:</label><div class="winField"><input autocomplete="off" class="winInput" id="shrinkDesiredMb" inputmode="numeric" placeholder="(se llenará solo)" step="1" type="number"/><button class="winBtn winBtn--copy" id="copyShrinkBtn" type="button">Copiar</button></div></div><div class="winRow"><label class="winLabel" for="totalAfterMb">Tamaño total después de la reducción, en MB:</label><input class="winInput" id="totalAfterMb" placeholder="(se calculará)" readonly="" type="text"/></div><div class="winInfo"><div aria-hidden="true" class="winInfoIcon">i</div><div class="winInfoText">No se puede reducir un volumen más allá del punto en el que haya algún archivo que no se pueda mover. Vea el evento "defrag" del registro de la aplicación para obtener información detallada acerca de la operación cuando se haya completado.</div></div><div class="winHelp">Vea "Reducir un volumen básico" en la Ayuda de Administración de discos para obtener más información.</div></div><div class="winButtons"><button class="winBtn winBtn--primary" id="btnReduceFake" type="button">Reducir</button><button class="winBtn" id="btnCancelFake" type="button">Cancelar</button></div></div></div><div class="simRight"><div aria-label="Administrador de discos (simulación)" class="dmWindow"><div class="dmTitlebar">Administrador de discos (simulación)</div><div class="dmBody"><div class="diskWrap dmDiskWrap">
+<div class="labelsRow">
+<div class="labelBox">
+<div class="labelTitle">Windows (después)</div>
+<div class="labelValue" id="labelWindowsAfter">—</div>
+</div>
+<div class="labelBox">
+<div class="labelTitle">Linux (espacio vacío)</div>
+<div class="labelValue" id="labelLinuxSpace">—</div>
+</div>
+</div>
+<div aria-label="Barra de disco con divisor" class="diskBar" id="diskBar">
+<div class="seg seg--win" id="segWin"></div>
+<div class="seg seg--linux" id="segLinux"></div>
+<div aria-label="Divisor de partición" aria-valuemax="0" aria-valuemin="0" aria-valuenow="0" class="dividerHandle" id="dividerHandle" role="slider" tabindex="0">
+<div aria-hidden="true" class="handleGrip"></div>
+</div>
+</div>
+<div class="mini">
+<div class="mini__row">
+<span class="mini__k">Tip:</span>
+<span class="mini__v">Arrastra el divisor o escribe el valor de “Tamaño a reducir”.</span>
+</div>
+<div class="mini__row">
+<span class="mini__k">Regla clave:</span>
+<span class="mini__v">Nunca podrás superar el “Espacio disponible para la reducción”.</span>
+</div>
+</div>
+<div aria-live="polite" class="msg" id="statusMsg" role="status"></div>
+</div></div></div></div></div></section><section class="card">
+<h2>Guía: “Reducir volumen” (Windows)</h2>
+
+  <div class="edu">
+    <div class="edu__item">
+      <div class="edu__icon">📌</div>
+      <div>
+        <b>¿Qué es “Reducir volumen”?</b><br/>
+        La opción <b>Reducir volumen</b> permite disminuir el tamaño de una partición existente (por ejemplo, la unidad <b>C:</b>)
+        para dejar <b>espacio no asignado</b> en el disco.
+        <ul class="eduList">
+          <li>Instalar otro sistema operativo (como Linux).</li>
+          <li>Crear una nueva partición para datos.</li>
+          <li>Separar el sistema de los archivos personales.</li>
+          <li>Organizar mejor el disco.</li>
+        </ul>
+        <b>No borra archivos automáticamente</b>, pero siempre es recomendable hacer una copia de seguridad antes.
+      </div>
+    </div>
+
+    <div class="edu__item">
+      <div class="edu__icon">1️⃣</div>
+      <div>
+        <b>Tamaño total antes de la reducción (en MB)</b><br/>
+        Es el tamaño actual de la partición antes de hacer cambios.
+      </div>
+    </div>
+
+    <div class="edu__item">
+      <div class="edu__icon">2️⃣</div>
+      <div>
+        <b>Espacio disponible para la reducción (en MB)</b><br/>
+        Este punto confunde mucho: <b>no es el espacio libre total</b>.<br/>
+        Es el <b>máximo que Windows te permite reducir en ese momento</b> (máximo permitido). A veces este máximo es menor de lo esperado
+        porque Windows no puede mover ciertos archivos del sistema mientras está en uso (paginación, hibernación, restauración, etc.).
+      </div>
+    </div>
+
+    <div class="edu__item">
+      <div class="edu__icon">3️⃣</div>
+      <div>
+        <b>Tamaño del espacio que desea reducir (en MB)</b><br/>
+        Aquí decides cuánto quieres reducir. Puedes escribir un valor <b>igual o menor</b> al “Espacio disponible para la reducción”.
+        Lo que reduzcas quedará como <b>espacio no asignado</b>.<br/>
+        En esta página, el panel <b>“Administrador de discos (simulación)”</b> te lo muestra también en <b>GB</b> para entenderlo mejor.
+      </div>
+    </div>
+
+    <div class="edu__item">
+      <div class="edu__icon">4️⃣</div>
+      <div>
+        <b>Tamaño total después de la reducción (en MB)</b><br/>
+        Es el tamaño con el que quedará la partición después de reducir.<br/>
+        <b>Tamaño antes</b> − <b>Tamaño a reducir</b> = <b>Tamaño después</b> (y en la simulación también lo verás en GB).
+      </div>
+    </div>
+
+    <div class="edu__item">
+      <div class="edu__icon">✅</div>
+      <div>
+        <b>¿Qué pasa después de “Reducir”?</b><br/>
+        En Windows aparecerá un bloque en negro llamado <b>“Espacio no asignado”</b>.
+        Puedes crear una nueva partición ahí, o dejarlo así para que el instalador de Linux lo use durante la instalación.
+      </div>
+    </div>
+
+    <div class="edu__item">
+      <div class="edu__icon">⚠️</div>
+      <div>
+        <b>Importante:</b> Esta página no hace cambios reales en tu disco. Solo simula números y proporciones.
+      </div>
+    </div>
+  </div>
+</section>
+<section class="card">
+  <h2>🖥️ Cómo usar el simulador (con explicaciones muy detalladas)</h2>
+
+  <h3>📌 Paso 1 — Abrir Windows</h3>
+  <p>En tu computadora:</p>
+  <ol>
+    <li>Presiona <code>Win + X</code></li>
+    <li>Selecciona <b>Administración de discos</b></li>
+    <li>Clic derecho en la partición <b>Windows (C:)</b></li>
+    <li>Selecciona <b>Reducir volumen…</b></li>
+  </ol>
+
+  <p>Windows mostrará una ventana con <b>3 valores importantes</b>.</p>
+
+  <hr/>
+
+  <h3>📋 Paso 2 — Copiar los primeros dos valores</h3>
+  <p>Debes copiar <b>exactamente</b> (en MB y sin puntos ni comas):</p>
+
+  <ul>
+    <li>✅ <b>Tamaño total antes de la reducción</b></li>
+    <li>✅ <b>Espacio disponible para la reducción</b></li>
+  </ul>
+
+  <p>Esos dos valores los ingresas en el simulador web.</p>
+
+  <hr/>
+
+  <h3>📊 Paso 3 — Entender la barra del disco</h3>
+
+  <p>Una vez ingresados los dos primeros valores:</p>
+  <p>A la derecha aparece la barra de disco simulada.</p>
+
+  <p>En esa barra verás:</p>
+
+  <ul>
+    <li>🔵 Zona azul → <b>Windows (después)</b></li>
+    <li>⚪ Zona gris rayada → <b>Espacio vacío para Linux</b></li>
+    <li>🎚️ Un pequeño control deslizante (divisor)</li>
+  </ul>
+
+  <p>
+    Ese pequeño control se llama:<br/>
+    <b>Divisor de partición</b> (o simplemente <i>divisor</i> / <i>handle</i> en términos técnicos).
+  </p>
+
+  <hr/>
+
+  <h3>🎚️ Cómo mover correctamente el divisor</h3>
+
+  <ol>
+    <li>Hacer clic sobre el divisor.</li>
+    <li>Mantener presionado el clic.</li>
+    <li>Arrastrarlo hacia la derecha.</li>
+  </ol>
+
+  <p>
+    ❗ No podrás moverlo hacia la izquierda más allá del límite 
+    (<i>No se puede reducir el espacio asignado más allá del punto en el que se encuentran los archivos no movibles.</i>)
+  </p>
+
+  <hr/>
+
+  <h3>❓ ¿Por qué no se puede mover hacia la izquierda?</h3>
+
+  <p>Porque Windows ya hizo su cálculo interno.</p>
+
+  <p>
+    Windows analiza el disco y detecta archivos que <b>no pueden moverse</b>, por ejemplo:
+  </p>
+
+  <ul>
+    <li>Archivo de paginación (<code>pagefile.sys</code>)</li>
+    <li>Hibernación</li>
+    <li>Metadatos del sistema</li>
+    <li>Fragmentos no desplazables</li>
+    <li>Estructuras internas del sistema NTFS</li>
+  </ul>
+
+  <p>
+    Por eso aparece un límite máximo.
+  </p>
+
+  <p>
+    Ese límite es exactamente el valor que Windows muestra como:<br/>
+    <b>“Espacio disponible para la reducción”</b>
+  </p>
+
+  <p>
+    Ese número es el máximo que Windows permite reducir en ese momento.
+  </p>
+
+  <p>
+    <b>Excepto que.-</b> uses un software de partición de terceros que puede reducir un volumen o partición de archivos inamovibles (los mueve automáticamente) a través de la función Redimensionar partición, como lo hace 
+    <a href="https://www.diskpart.com/es/articles/reducir-volumen-con-archivos-inamovibles-7400-tc.html" target="_blank">
+      AOMEI Partition Assistant
+    </a>.
+  </p>
+
+  <p>
+    Pero sin embago, esto para personas sin experiencia podría ser peligroso, y no quiero llevarlos a hacer cosas sin entender los riezgos, ese es un programa que lo pongo aquí porque yo lo he usado, solo que para usarlo hay que entender bien lo que se hace, hay que tener una capacitación, y es imprescindible sacar un respaldo. En Youtube hay videos donde explican cómo usarlo. Lo que no me gusta es que se demora mucho en todo el proceso de reducción y más rápido es usar el programa de Windows mismo.
+  </p>
+
+  <hr/>
+
+  <h3>📋 Botón “Copiar”</h3>
+
+  <p>
+    El campo:
+  </p>
+
+  <blockquote>
+    “Tamaño del espacio que desea reducir, en MB”
+  </blockquote>
+
+  <p>
+    incluye un botón <b>Copiar</b>.
+  </p>
+
+  <ul>
+    <li>Copia el valor automáticamente al portapapeles.</li>
+    <li>Permite pegarlo directamente en la ventana real de Windows.</li>
+  </ul>
+
+  <hr/>
+
+  <h3>📱 Uso en móvil</h3>
+
+  <ul>
+    <li>En computadoras → se muestra en dos columnas.</li>
+    <li>En celular → todo se muestra en una sola columna.</li>
+  </ul>
+
+  <p>
+    Primero aparece el simulador y debajo el resultado.
+  </p>
+
+  <hr/>
+
+  <h3>🛠️ Cómo está construido</h3>
+
+  <ul>
+    <li>HTML</li>
+    <li>CSS (estilo visual tipo Windows 10)</li>
+    <li>JavaScript (lógica del divisor y cálculos)</li>
+    <li>Clipboard API para copiar valores</li>
+  </ul>
+
+  <p>No requiere backend ni instalación.</p>
+
+  <hr/>
+
+  <h3>📘 Concepto importante</h3>
+
+  <p>
+    Muchas personas creen que si tienen, por ejemplo:
+  </p>
+
+  <p><b>Espacio libre: 250 GB</b></p>
+
+  <p>
+    Podrán reducir 250 GB completos.
+  </p>
+
+  <p>
+    Windows no solo mira cuánto espacio libre hay.
+    También revisa dónde están ubicados los archivos dentro del disco.
+    Si hay archivos importantes al final del disco, no podrá reducir más allá de ellos.
+  </p>
+
+  <p>
+    Eso es lo que este simulador ayuda a entender visualmente.
+  </p>
+
+  <hr/>
+
+  <h3>⚠️ Explicación de la advertencia oficial de Microsoft</h3>
+
+  <p>
+    La 
+    <a href="https://learn.microsoft.com/es-es/windows-server/storage/disk-management/shrink-a-basic-volume" target="_blank">
+      documentación de Microsoft
+    </a>
+    incluye la siguiente advertencia:
+  </p>
+
+  <blockquote>
+    "Si la partición es una partición sin formato que contiene datos, como un archivo de base de datos, reducirla podría destruir los datos".
+  </blockquote>
+
+  <p><b>¿Qué significa esto?</b></p>
+
+  <p>
+    Esta advertencia se refiere específicamente a las <b>particiones sin formato reconocible por Windows</b>, es decir, no se refiere al "Disco C:" que un usuario normal usa, sino a otra partición que no está formateada como NTFS
+  </p>
+
+  <p><b>Ejemplo típico en servidores:</b></p>
+
+  <ul>
+    <li>El administrador crea un disco adicional.</li>
+    <li>Ese disco NO se formatea con NTFS.</li>
+    <li>Se entrega directamente al motor de base de datos.</li>
+    <li>SQL Server escribe datos directamente a nivel de bloque.</li>
+  </ul>
+
+  <p>En ese caso:</p>
+
+  <ul>
+    <li>Windows no ve archivos.</li>
+    <li>No hay MFT (Tabla Maestra de Archivos)</li>
+    <li>No hay estructura NTFS.</li>
+    <li>El volumen aparece como RAW.</li>
+  </ul>
+
+  <p>
+    Pero SQL Server sí sabe qué bloques contienen datos.
+  </p>
+
+  <p>
+    Una partición sin formato es una partición que:
+  </p>
+
+  <ul>
+    <li>No utiliza un sistema de archivos reconocido (NTFS, FAT32, exFAT).</li>
+    <li>Es utilizada directamente por software especializado a nivel de bloque.</li>
+    <li>Usa un formato no reconocible para Windows (como también puede ser las particiones de Linux, ej: ext4, y otras).</li>
+  </ul>
+
+  <p><b>¿Por qué la reducción podría destruir datos?</b></p>
+
+  <p>Al reducir una partición NTFS normal, Windows:</p>
+
+  <ol>
+    <li>Lee los metadatos del sistema de archivos (MFT).</li>
+    <li>Sabe dónde se encuentran los archivos.</li>
+    <li>Mueve los archivos movibles si es necesario.</li>
+    <li>Reduce el tamaño de la partición de forma segura.</li>
+  </ol>
+
+  <p>Sin embargo, en una partición RAW:</p>
+
+  <ul>
+    <li>No existe una estructura de sistema de archivos.</li>
+    <li>Windows no puede identificar qué bloques contienen datos críticos.</li>
+    <li>La operación de reducción puede atravesar bloques de datos activos.</li>
+    <li>Esto puede provocar una pérdida irreversible de datos.</li>
+  </ul>
+
+  <p><b>¿Aplica esto a usuarios domésticos típicos?</b></p>
+
+  <p>
+    Si está reduciendo:
+  </p>
+
+  <ul>
+    <li>La partición del sistema de Windows (C:)</li>
+    <li>Una partición de datos NTFS estándar</li>
+  </ul>
+
+  <p>
+    Esta advertencia no se aplica.
+  </p>
+
+  <p>
+    Se refiere principalmente a:
+  </p>
+
+  <ul>
+    <li>Servidores de bases de datos que utilizan almacenamiento sin procesar</li>
+    <li>Sistemas industriales</li>
+    <li>Sistemas integrados</li>
+    <li>Configuraciones de almacenamiento especializadas</li>
+  </ul>
+
+  <p><b>Práctica recomendada</b></p>
+
+  <ul>
+    <li>Realizar una copia de seguridad de los datos importantes (Ej: Tesis, tareas, deberes, trabajos, diarios, ediciones de audio, video, etc).</li>
+    <li>Garantizar la estabilidad del sistema.</li>
+    <li>Evitar interrupciones de energía durante la operación.</li>
+  </ul>
+
+  <p>
+    Los cambios en la partición del disco modifican la estructura del dispositivo de almacenamiento, y fallos inesperados (como un corte de energía) pueden causar daños.
+  </p>
+
+  <p>
+    Si se corta la energía eléctrica mientras Windows está reduciendo el volumen:
+  </p>
+
+  <ul>
+    <li>El sistema podría dejar de arrancar.</li>
+    <li>La partición podría dañarse.</li>
+    <li>Se podrían perder archivos.</li>
+  </ul>
+
+  <p>
+    Por eso es recomendable:
+  </p>
+
+  <ul>
+    <li>Usar una laptop con batería cargada.</li>
+    <li>O tener un UPS si es computadora de escritorio.</li>
+  </ul>
+
+</section>
+</main>
+<footer class="footer">
+<div class="footer__cta">
+<div class="footer__title">¿Te sirvió? Haz fork, traduce, mejora el simulador 👇</div>
+<a class="footer__link" href="https://github.com/wachin/reducir-disco" rel="noopener" target="_blank">
+        https://github.com/wachin/reducir-disco
+      </a>
+</div>
+<div class="footer__meta">
+<div>Copyright: Washington Indacochea Delgado</div>
+<div>Correo: linuxfrontier@proton.me</div>
+<div>Licencia: GPL 3</div>
+<div>Año: 2026</div>
+</div>
+</footer>
+<script src="./app.js"></script>
+</body>
+</html>
