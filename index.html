@@ -449,19 +449,71 @@ body{margin:0;background:#f2f2f2;color:#111;font-family:"Segoe UI",system-ui,-ap
 
 </section>
 </main>
-<footer class="footer">
-<div class="footer__cta">
-<div class="footer__title">¿Te sirvió? Haz fork, traduce, mejora el simulador 👇</div>
-<a class="footer__link" href="https://github.com/wachin/reducir-disco" rel="noopener" target="_blank">
-        https://github.com/wachin/reducir-disco
-      </a>
-</div>
-<div class="footer__meta">
-<div>Copyright: Washington Indacochea Delgado</div>
-<div>Correo: linuxfrontier@proton.me</div>
-<div>Licencia: GPL 3</div>
-<div>Año: 2026</div>
-</div>
+<footer class="siteFooter">
+  <!-- Franja con arte -->
+  <div class="siteFooter__art">
+    <div class="siteFooter__artInner">
+      <img
+        class="siteFooter__artImg"
+        src="./Tux-en-la-barra-de-disco-simulada.png"
+        alt="Robot colocando a Tux en el espacio no asignado"
+        loading="lazy"
+      />
+    </div>
+  </div>
+
+  <!-- Barra inferior con info + links -->
+  <div class="siteFooter__bottom">
+    <div class="siteFooter__bottomInner">
+
+      <div class="siteFooter__left">
+        <div class="siteFooter__headline">¿Te sirvió el simulador?</div>
+        <div class="siteFooter__desc">
+          Haz <b>fork</b>, traduce o mejora el proyecto. ¡Aportes bienvenidos!
+        </div>
+
+        <a class="siteFooter__repo"
+           href="https://github.com/wachin/reducir-disco"
+           target="_blank" rel="noopener">
+          Ver código fuente en GitHub →
+        </a>
+
+        <div class="siteFooter__meta">
+          <span>© 2026 <b>Washington Indacochea Delgado</b></span>
+          <span>Licencia: <b>GPL-3.0</b></span>
+          <a class="siteFooter__mail" href="mailto:linuxfrontier@proton.me">linuxfrontier@proton.me</a>
+        </div>
+      </div>
+
+      <div class="siteFooter__right">
+        <div class="siteFooter__follow">Encuéntrame en</div>
+
+        <div class="socialRow">
+          <a class="socialBtn"
+             href="https://facilitarelsoftwarelibre.blogspot.com/"
+             target="_blank" rel="noopener"
+             aria-label="Blog (Blogger)">
+            <img src="./blogger-icon.png" alt="Blogger">
+          </a>
+
+          <a class="socialBtn"
+             href="https://www.facebook.com/wachin.id"
+             target="_blank" rel="noopener"
+             aria-label="Facebook">
+            <img src="./facebook-icon.png" alt="Facebook">
+          </a>
+
+          <a class="socialBtn"
+             href="https://www.youtube.com/@WashingtonIndacocheaDeldago"
+             target="_blank" rel="noopener"
+             aria-label="YouTube">
+            <img src="./youtube-icon.png" alt="YouTube">
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </footer>
 <script src="./app.js"></script>
 </body>
