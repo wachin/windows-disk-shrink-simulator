@@ -1,0 +1,8 @@
+# robots.txt for Windows Shrink Volume Simulator
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://wachin.github.io/windows-disk-shrink-simulator/sitemap.xml
+
+# No sensitive areas to disallow
