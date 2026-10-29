@@ -212,26 +212,26 @@ elShrinkDesired?.addEventListener("input", () => {
 
 btnCopy?.addEventListener("click", async () => {
   const val = digitsOnly(elShrinkDesired?.value);
-  if (!val) return setMsg("bad", "No hay un número para copiar todavía.");
+  if (!val) return setMsg("bad", window.i18nMessages?.nothingToCopy || "No hay un número para copiar todavía.");
 
   try{
     const ok = await copyToClipboard(val);
     if (!ok){
-      setMsg("bad", "No se pudo copiar automáticamente. Copia el número manualmente.");
+      setMsg("bad", window.i18nMessages?.copyFailed || "No se pudo copiar automáticamente. Copia el número manualmente.");
       return;
     }
 
     // Feedback breve en el botón + mensaje
     const old = btnCopy.textContent;
-    btnCopy.textContent = "¡Copiado!";
+    btnCopy.textContent = window.i18n?.t("btn.copied") || "¡Copiado!";
     btnCopy.disabled = true;
-    setMsg("ok", `Copiado: ${val} (MB). Ahora puedes pegarlo en Windows.`);
+    setMsg("ok", (window.i18nMessages?.copied || "Copiado: {value} (MB). Ahora puedes pegarlo en Windows.").replace("{value}", val));
     window.setTimeout(() => {
       btnCopy.textContent = old;
       btnCopy.disabled = false;
     }, 1100);
   }catch{
-    setMsg("bad", "No se pudo copiar automáticamente. Copia el número manualmente.");
+    setMsg("bad", window.i18nMessages?.copyFailed || "No se pudo copiar automáticamente. Copia el número manualmente.");
   }
 });
 
@@ -261,7 +261,7 @@ function applyDesired(desired){
 
 elDivider?.addEventListener("pointerdown", (e) => {
   if (toIntOrNull(elTotalBefore?.value) === null || toIntOrNull(elShrinkAvail?.value) === null){
-    setMsg("bad", "Primero ingresa “Tamaño total antes…” y “Espacio disponible…”.");
+    setMsg("bad", window.i18nMessages?.enterValues || "Primero ingresa “Tamaño total antes…” y “Espacio disponible…”.");
     return;
   }
   state.dragging = true;
@@ -278,6 +278,15 @@ window.addEventListener("pointerup", () => {
   if (!state.dragging) return;
   state.dragging = false;
   recompute();
+});
+
+
+// Listen for language changes to update UI text
+window.addEventListener('languageApplied', () => {
+  // Update copy button text if it was showing "¡Copiado!"
+  if (btnCopy && btnCopy.textContent === '¡Copiado!') {
+    btnCopy.textContent = window.i18n?.t('btn.copy') || 'Copiar';
+  }
 });
 
 // Init

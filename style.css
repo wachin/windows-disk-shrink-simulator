@@ -94,6 +94,91 @@ main{
   .simLayout{grid-template-columns:1fr}
 }
 
+/* ===== Right panel: disk visualization ===== */
+.simRight{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  align-items:stretch;
+}
+
+.diskVisual{
+  position:relative;
+  height:48px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:var(--panel2);
+  overflow:hidden;
+}
+
+.diskSeg{
+  position:absolute;
+  top:0; bottom:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  font-weight:600;
+  color:#fff;
+  text-shadow:0 1px 2px rgba(0,0,0,.3);
+  white-space:nowrap;
+  padding:0 8px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+#segWin{
+  left:0;
+  background:var(--winSeg);
+  border-top-left-radius:7px;
+  border-bottom-left-radius:7px;
+}
+
+#segLinux{
+  right:0;
+  background: linear-gradient(
+    45deg,
+    rgba(255,255,255,.15) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255,255,255,.15) 50%,
+    rgba(255,255,255,.15) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 12px 12px;
+  background-color: var(--linuxSeg);
+  animation: stripeMove 2s linear infinite;
+  border-top-right-radius:7px;
+  border-bottom-right-radius:7px;
+}
+
+@keyframes stripeMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 12px 12px; }
+}
+
+.diskDivider{
+  position:absolute;
+  top:0; bottom:0;
+  width:4px;
+  background:#fff;
+  border:1px solid rgba(0,0,0,.2);
+  box-shadow:0 2px 6px rgba(0,0,0,.2);
+  cursor:ew-resize;
+  z-index:10;
+  border-radius:2px;
+}
+
+.diskDivider:focus{
+  outline:2px solid var(--winSeg);
+  outline-offset:2px;
+}
+
+/* SimLeft/SminRight alignment */
+.simLeft{width:100%}
+.simRight{width:100%}
+
 /* ===== Windows "Shrink Volume" dialog mock ===== */
 .winDialog{
   background:var(--panel2);
