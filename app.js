@@ -235,6 +235,12 @@ btnCopy?.addEventListener("click", async () => {
   }
 });
 
+// Fake Reduce button (simulated dialog)
+const btnReduceFake = document.getElementById("btnReduceFake");
+btnReduceFake?.addEventListener("click", () => {
+  setMsg("bad", window.i18nMessages?.reduceFake || "Este botón debe pulsarlo en su Windows real.");
+});
+
 // Drag handle
 function barClientXToDesiredMb(clientX){
   if (!elDiskBar) return null;

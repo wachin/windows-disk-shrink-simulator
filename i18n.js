@@ -128,7 +128,8 @@
             desiredExceeds: t['msg.desiredExceeds'],
             copied: t['msg.copied'],
             copyFailed: t['msg.copyFailed'],
-            nothingToCopy: t['msg.nothingToCopy']
+            nothingToCopy: t['msg.nothingToCopy'],
+            reduceFake: t['btn.reduceFake']
         };
     }
 
